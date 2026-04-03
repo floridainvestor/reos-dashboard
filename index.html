@@ -58,7 +58,7 @@ details > summary::-webkit-details-marker { display: none; }
     </div>
   </div>
   <div style="text-align:right;">
-    <div style="background:#1a1a2e;border:1px solid #2a2a40;border-radius:6px;padding:6px 14px;font-size:0.82rem;color:#e8e8e8;">2026-04-03 14:57</div>
+    <div style="background:#1a1a2e;border:1px solid #2a2a40;border-radius:6px;padding:6px 14px;font-size:0.82rem;color:#e8e8e8;">2026-04-03 14:58</div>
     <div style="font-size:0.62rem;color:#444;margin-top:3px;">4/5 agents running</div>
   </div>
 </div>
@@ -307,7 +307,7 @@ function renderDrawer(d) {
   // ── PHONE LINK ──
   var phoneHtml = '';
   var _ct = d.contact || '';
-  var _phM = _ct.match(/([\+\(]?\d[\d\s\-\(\).]{7,}\d)/);
+  var _phM = _ct.match(/([\+\(]?\d[\d\s\-\(\)\.]{7,}\d)/);
   var _phRaw = _phM ? _phM[1].trim() : '';
   var _phDig = _phRaw.replace(/[^\d\+]/g, '');
   if (_phDig) {
