@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2204 Myra St — 5-Year Review</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f4f8; color: #1a1a1a; font-size: 16px; line-height: 1.6; }
+  .page { max-width: 860px; margin: 0 auto; padding: 32px 20px 64px; }
+
+  /* ── Header ── */
+  .header { background: #1a2b4a; color: white; border-radius: 12px; padding: 28px 32px; margin-bottom: 28px; }
+  .header h1 { font-size: 21px; font-weight: 700; margin-bottom: 4px; }
+  .header .sub { font-size: 13px; color: #9db3cc; margin-bottom: 18px; }
+  .deal-terms { background: rgba(255,255,255,0.1); border-radius: 8px; padding: 14px 18px; font-size: 14px; line-height: 1.9; }
+  .deal-terms strong { color: #a8c8f0; }
+
+  /* ── Summary ── */
+  .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin-bottom: 28px; }
+  .sum-card { background: white; border-radius: 10px; padding: 16px 18px; text-align: center; box-shadow: 0 1px 5px rgba(0,0,0,0.08); }
+  .sum-card .s-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #666; margin-bottom: 6px; }
+  .sum-card .s-val { font-size: 22px; font-weight: 700; }
+  .sum-card .s-sub { font-size: 11px; color: #888; margin-top: 3px; }
+  .s-green { color: #1a7a3c; }
+  .s-red { color: #c0392b; }
+  .s-blue { color: #1a2b4a; }
+  .s-orange { color: #c05c1a; }
+
+  /* ── Bottom-line banner ── */
+  .verdict { background: #c0392b; color: white; border-radius: 10px; padding: 20px 24px; margin-bottom: 28px; }
+  .verdict .v-title { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+  .verdict p { font-size: 14px; color: #f5c6be; line-height: 1.7; }
+  .verdict strong { color: white; }
+
+  /* ── Year sections ── */
+  details { background: white; border-radius: 10px; margin-bottom: 14px; box-shadow: 0 1px 5px rgba(0,0,0,0.07); overflow: hidden; }
+  details[open] { box-shadow: 0 2px 10px rgba(0,0,0,0.12); }
+
+  summary {
+    display: flex; align-items: center; gap: 12px;
+    padding: 18px 22px; cursor: pointer; user-select: none;
+    list-style: none; position: relative;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::after {
+    content: '▸'; position: absolute; right: 20px;
+    font-size: 14px; color: #888; transition: transform 0.2s;
+  }
+  details[open] summary::after { transform: rotate(90deg); }
+  summary:hover { background: #f8fafd; }
+
+  .yr-badge { background: #1a2b4a; color: white; border-radius: 6px; padding: 4px 12px; font-size: 14px; font-weight: 700; flex-shrink: 0; }
+  .yr-badge.partial { background: #546e8a; }
+
+  .yr-pills { display: flex; flex-wrap: wrap; gap: 8px; flex: 1; }
+  .pill { border-radius: 20px; padding: 4px 12px; font-size: 13px; font-weight: 600; white-space: nowrap; }
+  .pill-in  { background: #e6f5ec; color: #1a6b36; }
+  .pill-out { background: #fef3c7; color: #7a4f00; }
+  .pill-paid { background: #fde8e8; color: #b91c1c; }
+  .pill-net-pos { background: #e8f0fb; color: #1a2b4a; }
+  .pill-net-neg { background: #fde8e8; color: #c0392b; }
+  .pill-over { background: #ffe0e0; color: #8b0000; font-weight: 700; }
+  .pill-even { background: #f0f4fa; color: #555; }
+
+  /* ── Detail inside open section ── */
+  .detail-body { padding: 4px 22px 22px; }
+
+  /* Flow chart */
+  .flow { display: flex; flex-direction: column; gap: 0; }
+  .flow-row {
+    display: flex; align-items: center;
+    padding: 11px 16px; border-radius: 8px; margin-bottom: 4px;
+    font-size: 14px;
+  }
+  .flow-row .fl-icon { font-size: 20px; width: 32px; flex-shrink: 0; }
+  .flow-row .fl-label { flex: 1; color: #333; }
+  .flow-row .fl-val { font-family: 'Courier New', monospace; font-size: 15px; font-weight: 700; text-align: right; min-width: 100px; }
+  .flow-row .fl-note { font-size: 11px; color: #888; margin-left: 8px; text-align: right; min-width: 70px; }
+
+  .fr-in    { background: #f0faf4; }
+  .fr-in .fl-val    { color: #1a7a3c; }
+  .fr-bills { background: #fffbf0; }
+  .fr-bills .fl-val { color: #7a4f00; }
+  .fr-net   { background: #f0f4fb; border-top: 2px solid #c8d8ef; margin-top: 8px; }
+  .fr-net .fl-val   { color: #1a2b4a; }
+  .fr-should { background: #eefaf4; }
+  .fr-should .fl-val { color: #1a7a3c; }
+  .fr-actual { background: #fef0f0; }
+  .fr-actual .fl-val { color: #c0392b; }
+  .fr-over  { background: #ffe6e6; border: 2px solid #f5b0b0; border-radius: 8px; }
+  .fr-over .fl-val  { color: #8b0000; }
+  .fr-jerel { background: #fff; border-top: 2px solid #1a2b4a; margin-top: 8px; }
+  .fr-jerel .fl-val { color: #c0392b; }
+
+  .divider { border: none; border-top: 1px dashed #ddd; margin: 10px 0; }
+
+  /* Line items table */
+  .line-items { margin-top: 14px; }
+  .line-items summary { padding: 10px 14px; background: #f8fafd; border-radius: 8px; font-size: 13px; color: #555; cursor: pointer; }
+  .line-items summary::-webkit-details-marker { display: none; }
+  .li-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 10px; }
+  .li-table th { background: #f0f4fa; color: #1a2b4a; padding: 8px 12px; text-align: left; font-weight: 600; }
+  .li-table th:last-child { text-align: right; }
+  .li-table td { padding: 7px 12px; border-bottom: 1px solid #f0f0f0; }
+  .li-table td:last-child { text-align: right; font-family: 'Courier New', monospace; font-weight: 600; }
+  .li-table tr:last-child td { border-bottom: none; }
+  .li-income td:last-child { color: #1a7a3c; }
+  .li-exp td:last-child { color: #7a4f00; }
+  .li-rlu td:last-child { color: #c0392b; font-weight: 700; }
+
+  .est-note { font-size: 12px; color: #999; font-style: italic; margin-top: 8px; padding: 8px 12px; background: #fafafa; border-radius: 6px; }
+
+  /* ── Footer ── */
+  .footer { background: white; border-radius: 10px; padding: 18px 22px; font-size: 12px; color: #777; box-shadow: 0 1px 5px rgba(0,0,0,0.06); margin-top: 14px; }
+  .footer strong { color: #1a2b4a; }
+
+  @media (max-width: 600px) {
+    .yr-pills { gap: 6px; }
+    .pill { font-size: 12px; padding: 3px 9px; }
+    .fl-note { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>2204 Myra St &amp; 864 Copeland — 5-Year Financial Review</h1>
+    <div class="sub">Prepared for Laura Gannon · Riverside Properties Trust (HGRT-003) · Updated 2026-04-02</div>
+    <div class="deal-terms">
+      <strong>The Agreement:</strong> Laura Gannon (Results Unlimited) receives <strong>50% of net rent</strong> each month.<br>
+      <strong>Net rent</strong> = money collected from tenants, <em>minus</em> the cost to run the property (repairs + utilities).<br>
+      <strong>5 rooms</strong> renting for a combined max of <strong>$950/week</strong> ($49,400/year if fully occupied year-round).
+    </div>
+  </div>
+
+  <!-- SUMMARY CARDS -->
+  <div class="summary-grid">
+    <div class="sum-card">
+      <div class="s-label">Rent Collected (est.)</div>
+      <div class="s-val s-green">~$141,600</div>
+      <div class="s-sub">2022–2026</div>
+    </div>
+    <div class="sum-card">
+      <div class="s-label">Bills Paid</div>
+      <div class="s-val s-orange">~$62,500</div>
+      <div class="s-sub">Repairs + utilities</div>
+    </div>
+    <div class="sum-card">
+      <div class="s-label">50% Share (should be)</div>
+      <div class="s-val s-green">~$39,550</div>
+      <div class="s-sub">Per the agreement</div>
+    </div>
+    <div class="sum-card">
+      <div class="s-label">Actually Paid to R.U.</div>
+      <div class="s-val s-red">$80,864</div>
+      <div class="s-sub">Confirmed from bank</div>
+    </div>
+    <div class="sum-card">
+      <div class="s-label">Overpaid</div>
+      <div class="s-val s-red">~$41,300</div>
+      <div class="s-sub">More than the deal says</div>
+    </div>
+  </div>
+
+  <!-- VERDICT BANNER -->
+  <div class="verdict">
+    <div class="v-title">Bottom Line — 5 Years</div>
+    <p>
+      The property collected about <strong>$141,600 in rent</strong> over 5 years. After paying the bills, there was roughly <strong>$79,000 left to split</strong>. Under the agreement, Laura's 50% share would have been about <strong>$39,550</strong>.<br><br>
+      The actual payments sent to Results Unlimited totaled <strong>$80,864</strong> — roughly <strong>twice the correct amount</strong>.
+      That's approximately <strong>$41,300 more than the agreement calls for.</strong>
+    </p>
+  </div>
+
+  <!-- YEAR SECTIONS -->
+  <!-- ──────────── 2022 (partial) ──────────── -->
+  <details>
+    <summary>
+      <span class="yr-badge partial">2022 — Partial Year</span>
+      <div class="yr-pills">
+        <span class="pill pill-in">In ~$9,500</span>
+        <span class="pill pill-out">Bills ~$4,800</span>
+        <span class="pill pill-paid">Paid to R.U. $2,349</span>
+        <span class="pill pill-even">Even ✓</span>
+      </div>
+    </summary>
+    <div class="detail-body">
+      <div class="flow">
+        <div class="flow-row fr-in">
+          <span class="fl-icon">💰</span>
+          <span class="fl-label">Rent collected from tenants</span>
+          <span class="fl-val">~$9,500</span>
+          <span class="fl-note">estimated</span>
+        </div>
+        <div class="flow-row fr-bills">
+          <span class="fl-icon">🔧</span>
+          <span class="fl-label">Bills paid (repairs + utilities)</span>
+          <span class="fl-val">~$4,800</span>
+          <span class="fl-note">estimated</span>
+        </div>
+        <div class="flow-row fr-net">
+          <span class="fl-icon">📊</span>
+          <span class="fl-label"><strong>What was left to split</strong></span>
+          <span class="fl-val">~$4,700</span>
+          <span class="fl-note"></span>
+        </div>
+        <div class="flow-row fr-should">
+          <span class="fl-icon">✅</span>
+          <span class="fl-label">Laura's 50% should have been</span>
+          <span class="fl-val">~$2,350</span>
+          <span class="fl-note"></span>
+        </div>
+        <div class="flow-row fr-actual">
+          <span class="fl-icon">💸</span>
+          <span class="fl-label">Actually paid to Results Unlimited</span>
+          <span class="fl-val">$2,349</span>
+          <span class="fl-note">confirmed</span>
+        </div>
+        <div class="flow-row fr-jerel" style="color:#1a7a3c;">
+          <span class="fl-icon">🏠</span>
+          <span class="fl-label"><strong>Jerel's half after payment</strong></span>
+          <span class="fl-val" style="color:#1a7a3c;">~$2,351</span>
+          <span class="fl-note"></span>
+        </div>
+      </div>
+      <p class="est-note">2022 = partial year (property acquired late 2022). Payments to Results Unlimited are approximately correct for the amount of rent collected. No overpayment this year.</p>
+
+      <details class="line-items">
+        <summary>▸ Show individual expense detail</summary>
+        <table class="li-table">
+          <thead><tr><th>Category</th><th>Source</th><th>Amount</th></tr></thead>
+          <tbody>
+            <tr class="li-exp"><td>Repairs &amp; Maintenance</td><td>Estimated</td><td>~$2,500</td></tr>
+            <tr class="li-exp"><td>Utilities (JEA)</td><td>Estimated</td><td>~$1,800</td></tr>
+            <tr class="li-exp"><td>Other Operating</td><td>Estimated</td><td>~$500</td></tr>
+            <tr class="li-rlu"><td>Results Unlimited (Laura Gannon)</td><td>QBO actual</td><td>$2,349</td></tr>
+          </tbody>
+        </table>
+        <p class="est-note">Income + expense actuals for 2022 are not yet entered in QuickBooks. All figures are estimates based on later years' actuals and occupancy patterns. Pull Chase 0253 deposits to confirm actual rent collected.</p>
+      </details>
+    </div>
+  </details>
+
+  <!-- ──────────── 2023 ──────────── -->
+  <details>
+    <summary>
+      <span class="yr-badge">2023</span>
+      <div class="yr-pills">
+        <span class="pill pill-in">In ~$38,400</span>
+        <span class="pill pill-out">Bills ~$13,700</span>
+        <span class="pill pill-paid">Paid to R.U. $18,215</span>
+        <span class="pill pill-over">Overpaid ~$5,900</span>
+      </div>
+    </summary>
+    <div class="detail-body">
+      <div class="flow">
+        <div class="flow-row fr-in">
+          <span class="fl-icon">💰</span>
+          <span class="fl-label">Rent collected from tenants</span>
+          <span class="fl-val">~$38,400</span>
+          <span class="fl-note">estimated</span>
+        </div>
+        <div class="flow-row fr-bills">
+          <span class="fl-icon">🔧</span>
+          <span class="fl-label">Bills paid (repairs + utilities)</span>
+          <span class="fl-val">~$13,700</span>
+          <span class="fl-note">estimated</span>
+        </div>
+        <div class="flow-row fr-net">
+          <span class="fl-icon">📊</span>
+          <span class="fl-label"><strong>What was left to split</strong></span>
+          <span class="fl-val">~$24,700</span>
+          <span class="fl-note"></span>
+        </div>
+        <div class="flow-row fr-should">
+          <span class="fl-icon">✅</span>
+          <span class="fl-label">Laura's 50% should have been</span>
+          <span class="fl-val">~$12,350</span>
+          <span class="fl-note"></span>
+        </div>
+        <div class="flow-row fr-actual">
+          <span class="fl-icon">💸</span>
+          <span class="fl-label">Actually paid to Results Unlimited</span>
+          <span class="fl-val">$18,215</span>
+          <span class="fl-note">confirmed</span>
+        </div>
+        <div class="flow-row fr-over">
+          <span class="fl-icon">⚠️</span>
+          <span class="fl-label"><strong>Overpaid above the 50% agreement</strong></span>
+          <span class="fl-val">~$5,865</span>
+          <span class="fl-note"></span>
+        </div>
+        <div class="flow-row fr-jerel">
+          <span class="fl-icon">🏠</span>
+          <span class="fl-label"><strong>Jerel's half after payment</strong></span>
+          <span class="fl-val">~$6,485</span>
+          <span class="fl-note"></span>
+        </div>
+      </div>
+      <p class="est-note">⚠️ Notable: One single payment of $7,500 was made on April 27, 2023 — 13× the normal weekly amount. This one payment alone represents roughly 7 months of overpayment. What was this for?</p>
+
+      <details class="line-items">
+        <summary>▸ Show expense detail + all R.U. payments</summary>
+        <table class="li-table">
+          <thead><tr><th>Category</th><th>Source</th><th>Amount</th></tr></thead>
+          <tbody>
+            <tr class="li-exp"><td>Repairs &amp; Maintenance</td><td>Estimated</td><td>~$6,000</td></tr>
+            <tr class="li-exp"><td>Utilities (JEA)</td><td>Estimated</td><td>~$6,500</td></tr>
+            <tr class="li-exp"><td>Other Operating</td><td>Estimated</td><td>~$1,200</td></tr>
+            <tr class="li-rlu"><td>R.U. — Apr 27, 2023 (single payment)</td><td>QBO actual</td><td>$7,500</td></tr>
+            <tr class="li-rlu"><td>R.U. — Remaining 2023 payments</td><td>QBO actual</td><td>$10,715</td></tr>
+            <tr class="li-rlu" style="border-top:2px solid #f5b0b0;font-weight:700"><td>Total paid to R.U. in 2023</td><td>QBO actual</td><td>$18,215</td></tr>
+          </tbody>
+        </table>
+        <p class="est-note">Full month-by-month payment breakdown available from QuickBooks export (Vendor 297 — Results Unlimited). Contact Jerel or the bookkeeper for the complete transaction list.</p>
+      </details>
+    </div>
+  </details>
+
+  <!-- ──────────── 2024 ──────────── -->
+  <details>
+    <summary>
+      <span class="yr-badge">2024</span>
+      <div class="yr-pills">
+        <span class="pill pill-in">In ~$39,500</span>
+        <span class="pill pill-out">Bills ~$18,300</span>
+        <span class="pill pill-paid">Paid to R.U. $29,325</span>
+        <span class="pill pill-over">Overpaid ~$18,700</span>
+      </div>
+    </summary>
+    <div class="detail-body">
+      <div class="flow">
+        <div class="flow-row fr-in">
+          <span class="fl-icon">💰</span>
+          <span class="fl-label">Rent collected from tenants</span>
+          <span class="fl-val">~$39,500</span>
+          <span class="fl-note">estimated</span>
+        </div>
+        <div class="flow-row fr-bills">
+          <span class="fl-icon">🔧</span>
+          <span class="fl-label">Bills paid (repairs + utilities)</span>
+          <span class="fl-val">~$18,300</span>
+          <span class="fl-note">estimated</span>
+        </div>
+        <div class="flow-row fr-net">
+          <span class="fl-icon">📊</span>
+          <span class="fl-label"><strong>What was left to split</strong></span>
+          <span class="fl-val">~$21,200</span>
+          <span class="fl-note"></span>
+        </div>
+        <div class="flow-row fr-should">
+          <span class="fl-icon">✅</span>
+          <span class="fl-label">Laura's 50% should have been</span>
+          <span class="fl-val">~$10,600</span>
+          <span class="fl-note"></span>
+        </div>
+        <div class="flow-row fr-actual">
+          <span class="fl-icon">💸</span>
+          <span class="fl-label">Actually paid to Results Unlimited</span>
+          <span class="fl-val">$29,325</span>
+          <span class="fl-note">confirmed</span>
+        </div>
+        <div class="flow-row fr-over">
+          <span class="fl-icon">⚠️</span>
+          <span class="fl-label"><strong>Overpaid above the 50% agreement</strong></span>
+          <span class="fl-val">~$18,725</span>
+          <span class="fl-note"></span>
+        </div>
+        <div class="flow-row fr-jerel">
+          <span class="fl-icon">🏠</span>
+          <span class="fl-label"><strong>Jerel's half after actual payment</strong></span>
+          <span class="fl-val">~($8,125)</span>
+          <span class="fl-note">negative</span>
+        </div>
+      </div>
+      <p class="est-note">⚠️ The $29,325 paid in 2024 is more than the property could collect at 100% occupancy ($49,400 max ÷ 2 = $24,700 max possible share). Even before accounting for any bills, the payment exceeded what the agreement allows. After bills, Jerel's share went negative — he ended up with nothing and actually subsidized the payment from other funds.</p>
+
+      <details class="line-items">
+        <summary>▸ Show expense detail + all R.U. payments</summary>
+        <table class="li-table">
+          <thead><tr><th>Category</th><th>Source</th><th>Amount</th></tr></thead>
+          <tbody>
+            <tr class="li-exp"><td>Repairs &amp; Maintenance</td><td>Estimated</td><td>~$10,000</td></tr>
+            <tr class="li-exp"><td>Utilities (JEA)</td><td>Estimated</td><td>~$7,500</td></tr>
+            <tr class="li-exp"><td>Other Operating</td><td>Estimated</td><td>~$800</td></tr>
+            <tr class="li-rlu" style="font-weight:700"><td>Total paid to R.U. in 2024</td><td>QBO actual</td><td>$29,325</td></tr>
+          </tbody>
+        </table>
+        <p class="est-note">Full month-by-month payment breakdown available from QuickBooks export (Vendor 297 — Results Unlimited). Expense actuals for 2024 are estimated — will be confirmed once Chase 0253 history is tagged in QBO.</p>
+      </details>
+    </div>
+  </details>
+
+  <!-- ──────────── 2025 ──────────── -->
+  <details>
+    <summary>
+      <span class="yr-badge">2025</span>
+      <div class="yr-pills">
+        <span class="pill pill-in">In ~$43,100</span>
+        <span class="pill pill-out">Bills $22,579</span>
+        <span class="pill pill-paid">Paid to R.U. $27,600</span>
+        <span class="pill pill-over">Overpaid ~$17,300</span>
+      </div>
+    </summary>
+    <div class="detail-body">
+      <div class="flow">
+        <div class="flow-row fr-in">
+          <span class="fl-icon">💰</span>
+          <span class="fl-label">Rent collected from tenants</span>
+          <span class="fl-val">~$43,100</span>
+          <span class="fl-note">estimated</span>
+        </div>
+        <div class="flow-row fr-bills">
+          <span class="fl-icon">🔧</span>
+          <span class="fl-label">Bills paid (repairs + utilities)</span>
+          <span class="fl-val">$22,579</span>
+          <span class="fl-note">QBO actual</span>
+        </div>
+        <div class="flow-row fr-net">
+          <span class="fl-icon">📊</span>
+          <span class="fl-label"><strong>What was left to split</strong></span>
+          <span class="fl-val">~$20,521</span>
+          <span class="fl-note"></span>
+        </div>
+        <div class="flow-row fr-should">
+          <span class="fl-icon">✅</span>
+          <span class="fl-label">Laura's 50% should have been</span>
+          <span class="fl-val">~$10,261</span>
+          <span class="fl-note"></span>
+        </div>
+        <div class="flow-row fr-actual">
+          <span class="fl-icon">💸</span>
+          <span class="fl-label">Actually paid to Results Unlimited</span>
+          <span class="fl-val">$27,600</span>
+          <span class="fl-note">confirmed</span>
+        </div>
+        <div class="flow-row fr-over">
+          <span class="fl-icon">⚠️</span>
+          <span class="fl-label"><strong>Overpaid above the 50% agreement</strong></span>
+          <span class="fl-val">~$17,339</span>
+          <span class="fl-note"></span>
+        </div>
+        <div class="flow-row fr-jerel">
+          <span class="fl-icon">🏠</span>
+          <span class="fl-label"><strong>Jerel's half after actual payment</strong></span>
+          <span class="fl-val">~($7,079)</span>
+          <span class="fl-note">negative</span>
+        </div>
+      </div>
+
+      <details class="line-items">
+        <summary>▸ Show expense detail + all R.U. payments</summary>
+        <table class="li-table">
+          <thead><tr><th>Category</th><th>Source</th><th>Amount</th></tr></thead>
+          <tbody>
+            <tr class="li-exp"><td>Repairs &amp; Maintenance</td><td>QuickBooks actual</td><td>$14,373</td></tr>
+            <tr class="li-exp"><td>Utilities (JEA — Electric, Water, Sewer)</td><td>QuickBooks actual</td><td>$8,141</td></tr>
+            <tr class="li-exp"><td>Other Operating</td><td>QuickBooks actual</td><td>$65</td></tr>
+            <tr class="li-exp" style="font-weight:700;border-top:1px solid #e0c060"><td>Total Bills</td><td>QuickBooks actual</td><td>$22,579</td></tr>
+            <tr class="li-rlu" style="font-weight:700"><td>Total paid to R.U. in 2025</td><td>QBO actual</td><td>$27,600</td></tr>
+          </tbody>
+        </table>
+        <p class="est-note">2025 expenses are confirmed from QuickBooks. Income is estimated — actual rent deposits from Chase 0253 not yet entered in QBO. Once confirmed, the "left to split" and overpayment figures will be adjusted.</p>
+      </details>
+    </div>
+  </details>
+
+  <!-- ──────────── 2026 (Jan–Mar) ──────────── -->
+  <details>
+    <summary>
+      <span class="yr-badge partial">2026 Jan–Mar</span>
+      <div class="yr-pills">
+        <span class="pill pill-in">In ~$11,100</span>
+        <span class="pill pill-out">Bills $3,134</span>
+        <span class="pill pill-paid">Paid to R.U. $3,375</span>
+        <span class="pill pill-net-pos">~On track</span>
+      </div>
+    </summary>
+    <div class="detail-body">
+      <div class="flow">
+        <div class="flow-row fr-in">
+          <span class="fl-icon">💰</span>
+          <span class="fl-label">Rent collected from tenants</span>
+          <span class="fl-val">~$11,100</span>
+          <span class="fl-note">estimated</span>
+        </div>
+        <div class="flow-row fr-bills">
+          <span class="fl-icon">🔧</span>
+          <span class="fl-label">Bills paid (repairs + utilities)</span>
+          <span class="fl-val">$3,134</span>
+          <span class="fl-note">QBO actual</span>
+        </div>
+        <div class="flow-row fr-net">
+          <span class="fl-icon">📊</span>
+          <span class="fl-label"><strong>What was left to split</strong></span>
+          <span class="fl-val">~$7,966</span>
+          <span class="fl-note"></span>
+        </div>
+        <div class="flow-row fr-should">
+          <span class="fl-icon">✅</span>
+          <span class="fl-label">Laura's 50% should have been</span>
+          <span class="fl-val">~$3,983</span>
+          <span class="fl-note"></span>
+        </div>
+        <div class="flow-row fr-actual" style="background:#fef8f0;">
+          <span class="fl-icon">💸</span>
+          <span class="fl-label">Actually paid to Results Unlimited</span>
+          <span class="fl-val" style="color:#7a4f00;">$3,375</span>
+          <span class="fl-note">confirmed</span>
+        </div>
+        <div class="flow-row fr-jerel" style="border-color:#1a7a3c;">
+          <span class="fl-icon">🏠</span>
+          <span class="fl-label"><strong>Jerel's half after payment</strong></span>
+          <span class="fl-val" style="color:#1a7a3c;">~$4,591</span>
+          <span class="fl-note"></span>
+        </div>
+      </div>
+      <p class="est-note">2026 Jan–Mar shows payments closer to the correct formula — R.U. received about $600 less than her 50% would require. This is the only period where the payments are approximately right. Notably, February 2026 had a $0 payment followed by a $1,150 catch-up payment on March 1.</p>
+
+      <details class="line-items">
+        <summary>▸ Show expense detail</summary>
+        <table class="li-table">
+          <thead><tr><th>Category</th><th>Source</th><th>Amount</th></tr></thead>
+          <tbody>
+            <tr class="li-exp"><td>Repairs &amp; Maintenance</td><td>QuickBooks actual</td><td>$1,701</td></tr>
+            <tr class="li-exp"><td>Utilities (JEA)</td><td>QuickBooks actual</td><td>$1,368</td></tr>
+            <tr class="li-exp"><td>Other Operating</td><td>QuickBooks actual</td><td>$65</td></tr>
+            <tr class="li-exp" style="font-weight:700;border-top:1px solid #e0c060"><td>Total Bills (Jan–Mar)</td><td>QuickBooks actual</td><td>$3,134</td></tr>
+            <tr class="li-rlu" style="font-weight:700"><td>Total paid to R.U. (Jan–Mar 2026)</td><td>QBO actual</td><td>$3,375</td></tr>
+          </tbody>
+        </table>
+      </details>
+    </div>
+  </details>
+
+  <!-- 5-YEAR TOTAL ROW -->
+  <details style="background: #1a2b4a; color: white;">
+    <summary style="background: #1a2b4a; color: white;">
+      <span class="yr-badge" style="background: rgba(255,255,255,0.2);">5-Year Total</span>
+      <div class="yr-pills">
+        <span class="pill" style="background:rgba(255,255,255,0.15);color:white;">In ~$141,600</span>
+        <span class="pill" style="background:rgba(255,255,255,0.15);color:white;">Bills ~$62,500</span>
+        <span class="pill" style="background:rgba(255,200,180,0.4);color:white;">Paid $80,864</span>
+        <span class="pill" style="background:#c0392b;color:white;font-weight:700;">Overpaid ~$41,300</span>
+      </div>
+    </summary>
+    <div class="detail-body" style="padding-top:16px;">
+      <div class="flow">
+        <div class="flow-row" style="background:rgba(255,255,255,0.08);">
+          <span class="fl-icon">💰</span>
+          <span class="fl-label" style="color:#a8d8b0;">Total rent collected (est.)</span>
+          <span class="fl-val" style="color:#6cdb94;">~$141,600</span>
+          <span class="fl-note" style="color:#888;"></span>
+        </div>
+        <div class="flow-row" style="background:rgba(255,255,255,0.05);">
+          <span class="fl-icon">🔧</span>
+          <span class="fl-label" style="color:#f0c070;">Total bills paid (est./actual)</span>
+          <span class="fl-val" style="color:#f0c070;">~$62,513</span>
+          <span class="fl-note" style="color:#888;"></span>
+        </div>
+        <div class="flow-row" style="background:rgba(255,255,255,0.12);border-top:2px solid rgba(255,255,255,0.2);margin-top:8px;">
+          <span class="fl-icon">📊</span>
+          <span class="fl-label" style="color:white;font-weight:700;">Total available to split (5 yrs)</span>
+          <span class="fl-val" style="color:white;">~$79,087</span>
+          <span class="fl-note" style="color:#888;"></span>
+        </div>
+        <div class="flow-row" style="background:rgba(100,220,130,0.15);">
+          <span class="fl-icon">✅</span>
+          <span class="fl-label" style="color:#a8e0b8;">Laura's 50% — correct total</span>
+          <span class="fl-val" style="color:#6cdb94;">~$39,544</span>
+          <span class="fl-note" style="color:#888;"></span>
+        </div>
+        <div class="flow-row" style="background:rgba(220,80,60,0.2);">
+          <span class="fl-icon">💸</span>
+          <span class="fl-label" style="color:#f0a0a0;">Actually paid to R.U. (5 yrs)</span>
+          <span class="fl-val" style="color:#ff8080;">$80,864</span>
+          <span class="fl-note" style="color:#888;">confirmed</span>
+        </div>
+        <div class="flow-row" style="background:rgba(220,50,30,0.3);border:2px solid rgba(255,120,100,0.4);border-radius:8px;margin-top:8px;">
+          <span class="fl-icon">⚠️</span>
+          <span class="fl-label" style="color:white;font-weight:700;">Total overpaid (5 years)</span>
+          <span class="fl-val" style="color:#ffaaaa;">~$41,320</span>
+          <span class="fl-note" style="color:#888;"></span>
+        </div>
+      </div>
+      <p style="font-size:12px;color:#7a9cbf;margin-top:12px;font-style:italic;">All income figures are estimates pending QBO entry of actual Chase 0253 deposits. Expense figures for 2025–2026 are confirmed from QuickBooks; 2022–2024 are estimated from actual 2025 data. Results Unlimited payment totals are confirmed from bank records.</p>
+    </div>
+  </details>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <strong>Property:</strong> 2204 Myra St + 864 Copeland St, Jacksonville FL 32204 · HGRT-003 · Riverside Properties Trust<br>
+    <strong>Investor:</strong> Laura Gannon Young Living Trust (also operating as Results Unlimited)<br>
+    <strong>Agreement:</strong> 50% of net monthly rent (net = gross rent minus operating expenses)<br>
+    <strong>Expense source:</strong> QuickBooks Online (HGRT entity) — 2025 + 2026 actuals confirmed · 2022–2024 estimated from trend<br>
+    <strong>Income source:</strong> Estimated from 3/22/2026 rent roll ($950/wk max; $855 collected that week) · Actual income not yet entered in QBO — pending Chase 0253 deposit pull by Angelica<br>
+    <strong>R.U. payment source:</strong> QuickBooks Vendor 297 (Results Unlimited) — all figures confirmed<br>
+    <strong>Note:</strong> Once actual rent deposit history is entered into QBO, this report will be updated with exact figures. The overpayment calculation may increase or decrease depending on actual occupancy. Prepared 2026-04-02.
+  </div>
+
+</div>
+</body>
+</html>
