@@ -28,6 +28,8 @@ details > summary::-webkit-details-marker { display: none; }
 .deal-card:hover { background:#15151e !important; border-color:#3a3a5a !important; }
 .heir-row { cursor:pointer; }
 .heir-row:hover td { background:#1a1a26; }
+.rev-tap:hover { opacity:0.85;transform:scale(1.02);transition:all 0.15s; }
+.rev-tap { transition:all 0.15s; }
 .urg-badge { font-size:0.55rem;font-weight:800;padding:1px 5px;border-radius:3px;letter-spacing:0.06em;flex-shrink:0; }
 /* ── Detail drawer ── */
 #dd-overlay { display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:100; }
@@ -59,7 +61,7 @@ details > summary::-webkit-details-marker { display: none; }
     </div>
   </div>
   <div style="text-align:right;">
-    <div style="background:#1a1a2e;border:1px solid #2a2a40;border-radius:6px;padding:6px 14px;font-size:0.82rem;color:#e8e8e8;">Apr 11, 2026 · 8:15 PM ET</div>
+    <div style="background:#1a1a2e;border:1px solid #2a2a40;border-radius:6px;padding:6px 14px;font-size:0.82rem;color:#e8e8e8;">Apr 11, 2026 · 8:19 PM ET</div>
     <div style="font-size:0.62rem;color:#444;margin-top:3px;">4/6 agents running</div>
   </div>
 </div>
@@ -68,27 +70,27 @@ details > summary::-webkit-details-marker { display: none; }
 
 <!-- REVENUE STRIP -->
 <div class="g5" style="margin-bottom:20px;">
-  <div class="card" style="border-top:3px solid #22c55e;">
+  <div class="card rev-tap" style="border-top:3px solid #22c55e;cursor:pointer;" onclick="scrollToSection('deal-board')">
     <div class="lbl" style="margin-bottom:6px;">Closing Now</div>
     <div style="font-size:1.9rem;font-weight:800;color:#22c55e;">0</div>
     <div style="font-size:0.7rem;color:#555;margin-top:2px;">deals at stage 9+</div>
   </div>
-  <div class="card" style="border-top:3px solid #e2b714;">
+  <div class="card rev-tap" style="border-top:3px solid #e2b714;cursor:pointer;" onclick="scrollToSection('deal-board')">
     <div class="lbl" style="margin-bottom:6px;">Decisions Due</div>
     <div style="font-size:1.9rem;font-weight:800;color:#e2b714;">3</div>
     <div style="font-size:0.7rem;color:#555;margin-top:2px;">need your go/no-go</div>
   </div>
-  <div class="card" style="border-top:3px solid #f97316;">
+  <div class="card rev-tap" style="border-top:3px solid #f97316;cursor:pointer;" onclick="scrollToSection('deal-board')">
     <div class="lbl" style="margin-bottom:6px;">Blocked External</div>
     <div style="font-size:1.9rem;font-weight:800;color:#f97316;">1</div>
     <div style="font-size:0.7rem;color:#555;margin-top:2px;">waiting on others</div>
   </div>
-  <div class="card" style="border-top:3px solid #ef4444;">
+  <div class="card rev-tap" style="border-top:3px solid #ef4444;cursor:pointer;" onclick="scrollToSection('heirs-section')">
     <div class="lbl" style="margin-bottom:6px;">HEIRS Leads</div>
     <div style="font-size:1.9rem;font-weight:800;color:#ef4444;">8</div>
     <div style="font-size:0.7rem;color:#555;margin-top:2px;">verified estate leads</div>
   </div>
-  <div class="card" style="border-top:3px solid #525252;">
+  <div class="card rev-tap" style="border-top:3px solid #525252;cursor:pointer;" onclick="scrollToSection('heirs-section')">
     <div class="lbl" style="margin-bottom:6px;">HEIRS Worked</div>
     <div style="font-size:1.9rem;font-weight:800;color:#525252;">0</div>
     <div style="font-size:0.7rem;color:#555;margin-top:2px;">No session</div>
@@ -105,7 +107,7 @@ details > summary::-webkit-details-marker { display: none; }
 </div>
 
 <!-- DEAL BOARD — 4 BUCKETS -->
-<div style="margin-bottom:20px;">
+<div id="deal-board" style="margin-bottom:20px;">
   <div class="lbl" style="margin-bottom:10px;">Deal Board &mdash; 7 Active Deals</div>
   <div class="g4">
     <div style="background:#13131a;border:1px solid #1f1f2e;border-top:3px solid #22c55e;border-radius:8px;padding:14px;"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;"><span style="font-size:0.6rem;font-weight:800;letter-spacing:0.1em;color:#555;text-transform:uppercase;">CLOSING</span><span style="background:#052e16;color:#22c55e;font-size:0.68rem;font-weight:700;padding:2px 8px;border-radius:10px;">0</span></div><div style="color:#525252;font-size:0.75rem;padding:6px 0;">No deals closing</div></div>
@@ -117,7 +119,7 @@ details > summary::-webkit-details-marker { display: none; }
 </div>
 
 <!-- HEIRS ESTATES — CHASE THESE (ELEVATED) -->
-<div style="margin-bottom:20px;background:#13131a;border:1px solid #1f1f2e;border-left:4px solid #ef4444;border-radius:8px;padding:16px;">
+<div id="heirs-section" style="margin-bottom:20px;background:#13131a;border:1px solid #1f1f2e;border-left:4px solid #ef4444;border-radius:8px;padding:16px;">
   <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
     <span class="lbl">HEIRS Estates &mdash; Chase These</span>
     <span style="background:#450a0a;color:#ef4444;font-size:0.62rem;font-weight:800;padding:2px 8px;border-radius:10px;">8 verified</span>
@@ -251,6 +253,11 @@ var URGENCY_PALETTE = {
   blocked: { bg:'#431407', color:'#f97316' },
   watch:   { bg:'#1a1a26', color:'#6b7280' }
 };
+
+function scrollToSection(id) {
+  var el = document.getElementById(id);
+  if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
+}
 
 function openDrawer(el) {
   try {
