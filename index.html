@@ -152,21 +152,39 @@ details > summary::-webkit-details-marker { display: none; }
   </div>
 </div>
 
-<!-- LANE A + LANE B -->
-<div class="g2" style="margin-bottom:20px;">
-  <div style="background:#13131a;border:1px solid #1f1f2e;border-left:4px solid #22c55e;border-radius:8px;padding:14px;">
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
-      <span class="lbl">Lane A &mdash; Revenue Moves</span>
-      <span style="background:#052e16;color:#22c55e;font-size:0.58rem;font-weight:700;padding:1px 6px;border-radius:8px;">Jerel Only</span>
-    </div>
-    <div style="padding:7px 0;border-bottom:1px solid #1a1a26;"><div style="display:flex;align-items:center;flex-wrap:wrap;gap:2px;"><span style="font-size:0.78rem;color:#d0d0d0;">[S88] Drive by 20 properties for eval set</span></div><div style="font-size:0.68rem;color:#555;margin-top:1px;">Needed before Phase 5 (vision scoring). Mix of distress levels. *(Jerel&#x27;s action</div></div>
+<!-- LANE A — DRIVE-BY ROUTE + LEAD CARDS -->
+<div style="background:#13131a;border:1px solid #1f1f2e;border-left:4px solid #22c55e;border-radius:8px;padding:16px;margin-bottom:20px;">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
+    <span class="lbl">Lane A — Revenue Moves (20 Drive-By Leads)</span>
+    <span style="background:#052e16;color:#22c55e;font-size:0.58rem;font-weight:700;padding:1px 6px;border-radius:8px;">Jerel Only</span>
   </div>
+  <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;">
+    <a href="https://www.google.com/maps/dir/5073+Ravenwood+Dr+Green+Cove+Springs+FL+32043/307+Florida+Ct+Green+Cove+Springs+FL+32043/110+SW+Jasmine+Ave+Keystone+Heights+FL+32656/7707+Bundy+Lake+Rd+Keystone+Heights+FL+32656/4604+Plantain+Ave+Middleburg+FL+32068/530+Ellison+Rd+E+Jacksonville+FL+32234" target="_blank" style="display:inline-flex;align-items:center;gap:6px;background:#0a1f0a;border:1px solid #166534;border-radius:6px;padding:8px 14px;color:#22c55e;font-size:0.78rem;font-weight:700;text-decoration:none;">🗺 Clay County Route (6 stops)</a>
+    <a href="https://www.google.com/maps/dir/707+Bronson+St+Palatka+FL+32177/2018+Kate+St+Palatka+FL+32177/1102+N+12th+St+Palatka+FL+32177/2618+Catherine+St+Palatka+FL+32177/3009+Druid+St+Palatka+FL+32177/141+Cedar+Creek+Cutoff+Rd+Palatka+FL+32177/112+Gibson+Ct+Palatka+FL+32177/117+Magnolia+Dr+East+Palatka+FL+32131/714+David+Ave+Interlachen+FL+32148/113+Iroquois+St+Satsuma+FL+32189/110+Frontier+Dr+Satsuma+FL+32189/117+E+Main+St+Pomona+Park+FL+32181/110+Carolyn+Ct+Pomona+Park+FL+32181/108+Madison+Ave+Crescent+City+FL+32112" target="_blank" style="display:inline-flex;align-items:center;gap:6px;background:#0a1f0a;border:1px solid #166534;border-radius:6px;padding:8px 14px;color:#22c55e;font-size:0.78rem;font-weight:700;text-decoration:none;">🗺 Putnam County Route (14 stops)</a>
+  </div>
+  <div style="overflow-x:auto;">
+    <table style="width:100%;border-collapse:collapse;">
+      <thead><tr style="border-bottom:1px solid #1f1f2e;">
+        <th style="text-align:left;font-size:0.55rem;color:#555;padding:4px 8px;font-weight:700;text-transform:uppercase;">#</th>
+        <th style="text-align:left;font-size:0.55rem;color:#555;padding:4px 8px;font-weight:700;text-transform:uppercase;">Address</th>
+        <th style="text-align:left;font-size:0.55rem;color:#555;padding:4px 8px;font-weight:700;text-transform:uppercase;">Owner</th>
+        <th style="text-align:left;font-size:0.55rem;color:#555;padding:4px 8px;font-weight:700;text-transform:uppercase;">Age</th>
+        <th style="text-align:left;font-size:0.55rem;color:#555;padding:4px 8px;font-weight:700;text-transform:uppercase;">County</th>
+        <th style="text-align:left;font-size:0.55rem;color:#555;padding:4px 8px;font-weight:700;text-transform:uppercase;">Score</th>
+        <th style="text-align:left;font-size:0.55rem;color:#555;padding:4px 8px;font-weight:700;text-transform:uppercase;">Phone</th>
+      </tr></thead>
+      <tbody id="dbs-tbody"></tbody>
+    </table>
+  </div>
+</div>
+<!-- LANE B -->
+<div style="margin-bottom:20px;">
   <div style="background:#13131a;border:1px solid #1f1f2e;border-left:4px solid #3b82f6;border-radius:8px;padding:14px;opacity:0.88;">
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
-      <span class="lbl">Lane B &mdash; Ainsley Handles</span>
+      <span class="lbl">Lane B — Ainsley Handles</span>
       <span style="background:#1e1b4b;color:#3b82f6;font-size:0.58rem;font-weight:700;padding:1px 6px;border-radius:8px;">No Jerel Needed</span>
     </div>
-    <div style="padding:7px 0;border-bottom:1px solid #1a1a26;"><div style="display:flex;align-items:center;flex-wrap:wrap;gap:2px;"><span style="font-size:0.78rem;color:#d0d0d0;">SJHP call agent GHL config</span><span style="background:#1e1b4b;color:#3b82f6;font-size:0.52rem;font-weight:800;padding:1px 5px;border-radius:3px;letter-spacing:0.06em;margin-left:6px;">⚙ AUTO</span></div><div style="font-size:0.68rem;color:#555;margin-top:1px;">Duplicate GHL setup for Maya agent. Reference: `01_Internal_Manual/Dev_Specs/SJH</div></div><div style="padding:7px 0;border-bottom:1px solid #1a1a26;"><div style="display:flex;align-items:center;flex-wrap:wrap;gap:2px;"><span style="font-size:0.78rem;color:#d0d0d0;">D10: 867 Aiken St closing entry</span><span style="background:#1e1b4b;color:#3b82f6;font-size:0.52rem;font-weight:800;padding:1px 5px;border-radius:3px;letter-spacing:0.06em;margin-left:6px;">⚙ AUTO</span></div><div style="font-size:0.68rem;color:#555;margin-top:1px;">BLOCKED on closing statement PDF from Jerel (Precision Title, Oct 2024). Once re</div></div>
+    <div style="padding:7px 0;border-bottom:1px solid #1a1a26;"><div style="display:flex;align-items:center;flex-wrap:wrap;gap:2px;"><span style="font-size:0.78rem;color:#d0d0d0;">SJHP call agent GHL config</span><span style="background:#1e1b4b;color:#3b82f6;font-size:0.52rem;font-weight:800;padding:1px 5px;border-radius:3px;letter-spacing:0.06em;margin-left:6px;">⚙ AUTO</span></div><div style="font-size:0.68rem;color:#555;margin-top:1px;">Duplicate GHL setup for Maya agent</div></div><div style="padding:7px 0;border-bottom:1px solid #1a1a26;"><div style="display:flex;align-items:center;flex-wrap:wrap;gap:2px;"><span style="font-size:0.78rem;color:#d0d0d0;">D10: 867 Aiken St closing entry</span><span style="background:#1e1b4b;color:#3b82f6;font-size:0.52rem;font-weight:800;padding:1px 5px;border-radius:3px;letter-spacing:0.06em;margin-left:6px;">⚙ AUTO</span></div><div style="font-size:0.68rem;color:#555;margin-top:1px;">BLOCKED on closing statement PDF from Jerel</div></div>
   </div>
 </div>
 
@@ -266,6 +284,110 @@ function openDrawer(el) {
     renderDrawer(d);
   } catch(e) { console.error('Drawer error', e); }
 }
+
+var DBS_LEADS = [
+  {r:1,addr:"5073 Ravenwood Dr, Green Cove Springs FL 32043",owner:"Mary Scopinich",age:97,phone:"(904) 657-2935",raw:"9046572935",county:"Clay",city:"Green Cove Springs",score:95,income:"Under $10K",flags:"Age 85+, Income <$10K"},
+  {r:2,addr:"707 Bronson St, Palatka FL 32177",owner:"Lawrence Wiggs",age:99,phone:"(386) 325-7459",raw:"3863257459",county:"Putnam",city:"Palatka",score:95,income:"Under $10K",flags:"Age 85+, Income <$10K"},
+  {r:3,addr:"2018 Kate St, Palatka FL 32177",owner:"Sandra Purcell",age:91,phone:"(386) 328-2624",raw:"3863282624",county:"Putnam",city:"Palatka",score:95,income:"Under $10K",flags:"Age 85+, Income <$10K"},
+  {r:4,addr:"113 Iroquois St, Satsuma FL 32189",owner:"Margie Belcher",age:98,phone:"(386) 649-9384",raw:"3866499384",county:"Putnam",city:"Satsuma",score:95,income:"Under $10K",flags:"Age 85+, Income <$10K"},
+  {r:5,addr:"110 SW Jasmine Ave, Keystone Heights FL 32656",owner:"Lucille White",age:92,phone:"(352) 473-2041",raw:"3524732041",county:"Clay",city:"Keystone Heights",score:95,income:"Under $10K",flags:"Age 85+, Income <$10K"},
+  {r:6,addr:"530 Ellison Rd E, Jacksonville FL 32234",owner:"Madeline Pence",age:88,phone:"(904) 266-9563",raw:"9042669563",county:"Clay",city:"Jacksonville",score:95,income:"Under $10K",flags:"Age 85+, Income <$10K"},
+  {r:7,addr:"4604 Plantain Ave, Middleburg FL 32068",owner:"Rose Hollis",age:93,phone:"(904) 910-8144",raw:"9049108144",county:"Clay",city:"Middleburg",score:90,income:"$10K-$14K",flags:"Age 85+, Income $10-14K"},
+  {r:8,addr:"117 Magnolia Dr, East Palatka FL 32131",owner:"Margaret Wilson",age:87,phone:"(386) 854-0342",raw:"3868540342",county:"Putnam",city:"East Palatka",score:90,income:"$10K-$14K",flags:"Age 85+, Income $10-14K"},
+  {r:9,addr:"714 David Ave, Interlachen FL 32148",owner:"Vernon Dusseau",age:98,phone:"(386) 222-9140",raw:"3862229140",county:"Putnam",city:"Interlachen",score:90,income:"$10K-$14K",flags:"Age 85+, Income $10-14K"},
+  {r:10,addr:"1102 N 12th St, Palatka FL 32177",owner:"Marian Brigmon",age:98,phone:"(386) 328-4179",raw:"3863284179",county:"Putnam",city:"Palatka",score:90,income:"$10K-$14K",flags:"Age 85+, Income $10-14K"},
+  {r:11,addr:"2618 Catherine St, Palatka FL 32177",owner:"Joyce Bordner",age:89,phone:"(904) 312-9830",raw:"9043129830",county:"Putnam",city:"Palatka",score:90,income:"$10K-$14K",flags:"Age 85+, Income $10-14K"},
+  {r:12,addr:"3009 Druid St, Palatka FL 32177",owner:"Mary Coulliette",age:86,phone:"(386) 336-6998",raw:"3863366998",county:"Putnam",city:"Palatka",score:90,income:"$10K-$14K",flags:"Age 85+, Income $10-14K"},
+  {r:13,addr:"117 E Main St, Pomona Park FL 32181",owner:"Charles Insalaco",age:99,phone:"(386) 649-8572",raw:"3866498572",county:"Putnam",city:"Pomona Park",score:90,income:"$10K-$14K",flags:"Age 85+, Income $10-14K"},
+  {r:14,addr:"110 Carolyn Ct, Pomona Park FL 32181",owner:"Arthur Ricker Sr",age:92,phone:"(386) 649-5426",raw:"3866495426",county:"Putnam",city:"Pomona Park",score:90,income:"$10K-$14K",flags:"Age 85+, Income $10-14K"},
+  {r:15,addr:"7707 Bundy Lake Rd, Keystone Heights FL 32656",owner:"Donald Sapp",age:88,phone:"(904) 626-4265",raw:"9046264265",county:"Clay",city:"Keystone Heights",score:90,income:"$10K-$14K",flags:"Age 85+, Income $10-14K"},
+  {r:16,addr:"110 Frontier Dr, Satsuma FL 32189",owner:"Jimmy Weaver",age:86,phone:"(386) 559-2956",raw:"3865592956",county:"Putnam",city:"Satsuma",score:90,income:"$10K-$14K",flags:"Age 85+, Income $10-14K"},
+  {r:17,addr:"108 Madison Ave, Crescent City FL 32112",owner:"Maynard Kahl",age:95,phone:"(386) 214-4811",raw:"3862144811",county:"Putnam",city:"Crescent City",score:90,income:"$10K-$14K",flags:"Age 85+, Income $10-14K"},
+  {r:18,addr:"141 Cedar Creek Cutoff Rd, Palatka FL 32177",owner:"Agnes Bell",age:103,phone:"(386) 328-6509",raw:"3863286509",county:"Putnam",city:"Palatka",score:90,income:"$10K-$14K",flags:"Age 85+, Income $10-14K"},
+  {r:19,addr:"112 Gibson Ct, Palatka FL 32177",owner:"Erma Thompson",age:90,phone:"(904) 325-3061",raw:"9043253061",county:"Putnam",city:"Palatka",score:90,income:"$10K-$14K",flags:"Age 85+, Income $10-14K"},
+  {r:20,addr:"307 Florida Ct, Green Cove Springs FL 32043",owner:"Gilberte Smart",age:96,phone:"(907) 843-2613",raw:"9078432613",county:"Clay",city:"Green Cove Springs",score:90,income:"$10K-$14K",flags:"Age 85+, Income $10-14K"}
+];
+
+(function(){
+  var tb = document.getElementById('dbs-tbody');
+  if(!tb) return;
+  DBS_LEADS.forEach(function(d){
+    var sc = d.score >= 95 ? '#22c55e' : '#e2b714';
+    var ac = d.age >= 90 ? '#ef4444' : '#e2b714';
+    var tr = document.createElement('tr');
+    tr.className = 'heir-row';
+    tr.style.cssText = 'border-bottom:1px solid #111118;cursor:pointer;';
+    tr.setAttribute('data-dbs-idx', d.r - 1);
+    tr.onclick = function(){ openDBSDrawer(d); };
+    tr.innerHTML =
+      '<td style="padding:6px 8px;font-size:0.72rem;color:'+sc+';font-weight:800;">'+d.r+'</td>'+
+      '<td style="padding:6px 8px;font-size:0.72rem;color:#d0d0d0;">'+escHtml(d.addr.split(',')[0])+'</td>'+
+      '<td style="padding:6px 8px;font-size:0.72rem;color:#ccc;">'+escHtml(d.owner)+'</td>'+
+      '<td style="padding:6px 8px;font-size:0.72rem;color:'+ac+';font-weight:700;">'+d.age+'</td>'+
+      '<td style="padding:6px 8px;font-size:0.65rem;color:#888;">'+d.county+'</td>'+
+      '<td style="padding:6px 8px;font-size:0.72rem;color:'+sc+';font-weight:700;">'+d.score+'</td>'+
+      '<td style="padding:6px 8px;"><a href="tel:'+d.raw+'" onclick="event.stopPropagation()" style="color:#22c55e;font-size:0.72rem;text-decoration:none;">'+escHtml(d.phone)+'</a></td>';
+    tb.appendChild(tr);
+  });
+})();
+
+function openDBSDrawer(d) {
+  var mapsUrl = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(d.addr);
+  var satUrl = 'https://www.google.com/maps/@?api=1&map_action=map&center=' + encodeURIComponent(d.addr) + '&zoom=19&basemap=satellite';
+  var firstName = d.owner.split(' ')[0];
+  var html =
+    '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;">' +
+      '<div>' +
+        '<div style="font-size:0.5rem;text-transform:uppercase;letter-spacing:0.12em;color:#555;margin-bottom:3px;">DRIVE-BY LEAD #' + d.r + '</div>' +
+        '<div style="font-size:1.05rem;font-weight:800;color:#fff;">' + escHtml(d.addr) + '</div>' +
+      '</div>' +
+      '<span onclick="closeDrawer()" style="cursor:pointer;font-size:1.2rem;color:#555;padding:4px;">✕</span>' +
+    '</div>' +
+    '<div style="margin-bottom:14px;background:#1a1a2e;border-radius:6px;height:72px;display:flex;align-items:center;justify-content:center;gap:12px;">' +
+      '<a href="' + escHtml(mapsUrl) + '" target="_blank" style="color:#4a7ab5;font-size:0.78rem;text-decoration:none;">📍 Street View</a>' +
+      '<a href="' + escHtml(satUrl) + '" target="_blank" style="color:#4a7ab5;font-size:0.78rem;text-decoration:none;">🛰 Satellite</a>' +
+    '</div>' +
+    '<div style="background:#0c0c1a;border:1px solid #2a2a50;border-radius:6px;padding:10px 14px;margin-bottom:12px;">' +
+      '<div style="font-size:0.52rem;text-transform:uppercase;letter-spacing:0.1em;color:#555;margin-bottom:4px;">Owner</div>' +
+      '<div style="font-size:1rem;font-weight:800;color:#e2b714;">' + escHtml(d.owner) + '</div>' +
+      '<div style="font-size:0.75rem;color:#888;margin-top:2px;">Age ' + d.age + ' · ' + escHtml(d.county) + ' County</div>' +
+    '</div>' +
+    '<div style="background:#0a1f0a;border:1px solid #166534;border-radius:6px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;gap:10px;">' +
+      '<span style="font-size:1.1rem;">📞</span>' +
+      '<a href="tel:' + d.raw + '" style="font-size:1.05rem;font-weight:800;color:#22c55e;text-decoration:none;letter-spacing:0.04em;">' + escHtml(d.phone) + '</a>' +
+    '</div>' +
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">' +
+      '<div style="background:#111118;border:1px solid #1f1f2e;border-radius:6px;padding:8px 12px;">' +
+        '<div style="font-size:0.52rem;text-transform:uppercase;letter-spacing:0.1em;color:#555;">Score</div>' +
+        '<div style="font-size:1.4rem;font-weight:800;color:' + (d.score >= 95 ? '#22c55e' : '#e2b714') + ';">' + d.score + '</div>' +
+      '</div>' +
+      '<div style="background:#111118;border:1px solid #1f1f2e;border-radius:6px;padding:8px 12px;">' +
+        '<div style="font-size:0.52rem;text-transform:uppercase;letter-spacing:0.1em;color:#555;">Income</div>' +
+        '<div style="font-size:0.88rem;font-weight:700;color:#ef4444;margin-top:4px;">' + escHtml(d.income) + '</div>' +
+      '</div>' +
+    '</div>' +
+    '<div style="background:#111118;border:1px solid #1f1f2e;border-radius:6px;padding:8px 12px;margin-bottom:12px;">' +
+      '<div style="font-size:0.52rem;text-transform:uppercase;letter-spacing:0.1em;color:#555;margin-bottom:4px;">Distress Flags</div>' +
+      '<div style="font-size:0.78rem;color:#ef4444;">' + escHtml(d.flags) + '</div>' +
+    '</div>' +
+    '<div style="background:#111118;border:1px solid #1f1f2e;border-radius:6px;padding:10px 14px;margin-bottom:12px;">' +
+      '<div style="font-size:0.52rem;text-transform:uppercase;letter-spacing:0.1em;color:#555;margin-bottom:6px;">If Someone\'s Outside</div>' +
+      '<div style="font-size:0.78rem;color:#ccc;line-height:1.5;">' +
+        '"Hi, my name is Jerel — I invest in properties around ' + escHtml(d.city) + '. ' +
+        'I was driving by and noticed the house. Is ' + escHtml(firstName) + ' around? ' +
+        'I\'d love to have a quick conversation if they have a minute."' +
+      '</div>' +
+      '<div style="font-size:0.68rem;color:#555;margin-top:6px;font-style:italic;">If not home: leave card. If receptive: ask about property plans, any interest in selling.</div>' +
+    '</div>' +
+    '<div style="display:flex;gap:8px;flex-wrap:wrap;">' +
+      '<a href="tel:' + d.raw + '" style="display:inline-flex;align-items:center;gap:4px;background:#0a1f0a;border:1px solid #166534;border-radius:6px;padding:8px 14px;color:#22c55e;font-size:0.75rem;font-weight:700;text-decoration:none;">📞 Call Now</a>' +
+      '<a href="' + escHtml(mapsUrl) + '" target="_blank" style="display:inline-flex;align-items:center;gap:4px;background:#0a0f1f;border:1px solid #1e3a5f;border-radius:6px;padding:8px 14px;color:#60a5fa;font-size:0.75rem;font-weight:700;text-decoration:none;">📍 Navigate</a>' +
+    '</div>';
+  document.getElementById('dd-content').innerHTML = html;
+  document.getElementById('dd-overlay').style.display = 'block';
+  document.getElementById('dd-panel').style.display = 'block';
+}
+
 
 function closeDrawer() {
   document.getElementById('dd-overlay').style.display = 'none';
