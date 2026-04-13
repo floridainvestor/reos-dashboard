@@ -473,7 +473,21 @@ function renderDrawer(d) {
     var _ps  = d.padsplit_total ? '$' + Number(d.padsplit_total).toLocaleString() + '/mo' : '';
     var _psr = d.padsplit_room_rate ? '$' + Number(d.padsplit_room_rate).toLocaleString() + '/rm' : '';
 
-    specsHtml = '<div style="background:#0e0e1c;border:1px solid #2a2a45;border-radius:6px;padding:10px 12px;margin-bottom:10px;">';
+    // ── SELLER SEES THIS — prominent DM/Zestimate callout ──
+    if (_dmv) {
+      specsHtml +=
+        '<div style="background:#1a0f00;border:2px solid #e2b714;border-radius:8px;padding:10px 14px;margin-bottom:10px;">' +
+        '<div style="font-size:0.55rem;font-weight:800;color:#e2b714;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px;">' +
+        '⚠️ SELLER SEES THIS VALUE</div>' +
+        '<div style="display:flex;align-items:baseline;gap:8px;">' +
+        '<span style="font-size:1.3rem;font-weight:900;color:#e2b714;">' + escHtml(_dmv) + '</span>' +
+        '<span style="font-size:0.62rem;color:#888;">(DealMachine Est.)</span>' +
+        '</div>' +
+        (_mv ? '<div style="font-size:0.62rem;color:#666;margin-top:4px;">PAO Assessed: ' + escHtml(_mv) + '</div>' : '') +
+        '</div>';
+    }
+
+    specsHtml += '<div style="background:#0e0e1c;border:1px solid #2a2a45;border-radius:6px;padding:10px 12px;margin-bottom:10px;">';
 
     // Property specs row
     var specParts = [];
@@ -481,14 +495,15 @@ function renderDrawer(d) {
     if (d.baths != null) specParts.push(d.baths + ' ba');
     if (d.sqft) specParts.push(d.sqft.toLocaleString() + ' sqft');
     if (d.year_built) specParts.push('built ' + d.year_built);
+    if (d.building_type) specParts.push(d.building_type);
     if (specParts.length) {
       specsHtml += '<div style="font-size:0.8rem;font-weight:700;color:#e2e2e2;margin-bottom:8px;">' + specParts.join(' · ') + '</div>';
     }
 
-    // Financial 4-up grid
+    // Financial grid — with Seller Sees callout
     var finItems = [
-      ['Mkt Value', _mv],
       ['DM Value', _dmv],
+      ['PAO Assessed', _mv],
       ['LT Rent Est', _re],
       ['PadSplit Total', _ps ? _ps + ' (' + _psr + ')' : ''],
     ].filter(function(x) { return x[1]; });
@@ -496,10 +511,11 @@ function renderDrawer(d) {
     if (finItems.length) {
       specsHtml += '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:5px;">';
       finItems.forEach(function(item) {
+        var valColor = item[0] === 'PAO Assessed' ? '#888' : '#e2b714';
         specsHtml +=
           '<div style="background:#111;border-radius:4px;padding:5px 7px;">' +
           '<div style="font-size:0.52rem;color:#555;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:2px;">' + item[0] + '</div>' +
-          '<div style="font-size:0.78rem;font-weight:700;color:#e2b714;">' + escHtml(item[1]) + '</div>' +
+          '<div style="font-size:0.78rem;font-weight:700;color:' + valColor + ';">' + escHtml(item[1]) + '</div>' +
           '</div>';
       });
       specsHtml += '</div>';
@@ -525,7 +541,7 @@ function renderDrawer(d) {
     if (d.waiting_on)         facts.push(['Waiting',   d.waiting_on.substring(0,45)]);
   } else {
     if (d.owner)              facts.push(['Owner',      d.owner]);
-    if (d.market_value)       facts.push(['Mkt Value',  d.market_value]);
+    if (d.market_value)       facts.push(['PAO Assessed', d.market_value]);
     if (d.property_type)      facts.push(['Type',       d.property_type]);
     if (d.lot_acres)      facts.push(['Lot',        d.lot_acres + ' acres']);
     if (d.city)           facts.push(['City',       d.city + (d.zip ? ' ' + d.zip : '')]);
