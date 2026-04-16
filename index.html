@@ -64,7 +64,7 @@ details > summary::-webkit-details-marker { display: none; }
     </div>
   </div>
   <div style="text-align:right;">
-    <div style="background:#1a1a2e;border:1px solid #2a2a40;border-radius:6px;padding:6px 14px;font-size:0.82rem;color:#e8e8e8;">Apr 15, 2026 · 10:30 PM ET</div>
+    <div style="background:#1a1a2e;border:1px solid #2a2a40;border-radius:6px;padding:6px 14px;font-size:0.82rem;color:#e8e8e8;">Apr 15, 2026 · 10:33 PM ET</div>
     <div style="font-size:0.62rem;color:#444;margin-top:3px;">4/6 agents running</div>
   </div>
 </div>
@@ -545,7 +545,8 @@ function renderDrawer(d) {
   if ((isHeir || isDbs) && d.phones && d.phones.length) {
     // Caller name header — prominently displayed ABOVE phone numbers
     phoneHtml = '';
-    if (d.skip_trace_target) {
+    var _callerName = d.skip_trace_target || (isDbs ? d.owner : '');
+    if (_callerName) {
       phoneHtml +=
         '<div style="background:#0c0c1a;border:1px solid #2a2a50;border-radius:6px;' +
         'padding:8px 12px;margin-bottom:8px;display:flex;align-items:center;gap:8px;">' +
@@ -553,7 +554,7 @@ function renderDrawer(d) {
         '<div>' +
         '<div style="font-size:0.52rem;text-transform:uppercase;letter-spacing:0.1em;color:#555;margin-bottom:2px;">Calling</div>' +
         '<div style="font-size:0.88rem;font-weight:800;color:#e2b714;letter-spacing:0.02em;">' +
-        escHtml(d.skip_trace_target) + '</div>' +
+        escHtml(_callerName) + '</div>' +
         '</div></div>';
     }
     // Phone rows
@@ -687,10 +688,27 @@ function renderDrawer(d) {
 
     specsHtml += '</div>';
   } else if (isDbs) {
-    // ── DBS: INLINE SCORING + DISTRESS CARD ──
+    // ── DBS: HEIRS-STYLE SPECS CARD ──
+
+    // SELLER SEES THIS VALUE — estimated value from ListShack
+    var _dbs_est = d.estimated_value ? '$' + Number(d.estimated_value).toLocaleString() : '';
+    var _dbs_assessed = d.assessed_value ? '$' + Number(d.assessed_value).toLocaleString() : '';
+    if (_dbs_est) {
+      specsHtml +=
+        '<div style="background:#1a0f00;border:2px solid #e2b714;border-radius:8px;padding:10px 14px;margin-bottom:10px;">' +
+        '<div style="font-size:0.55rem;font-weight:800;color:#e2b714;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px;">' +
+        '⚠️ SELLER SEES THIS VALUE</div>' +
+        '<div style="display:flex;align-items:baseline;gap:8px;">' +
+        '<span style="font-size:1.3rem;font-weight:900;color:#e2b714;">' + escHtml(_dbs_est) + '</span>' +
+        '<span style="font-size:0.62rem;color:#888;">(ListShack Est.)</span>' +
+        '</div>' +
+        (_dbs_assessed ? '<div style="font-size:0.62rem;color:#666;margin-top:4px;">PAO Assessed: ' + escHtml(_dbs_assessed) + '</div>' : '') +
+        '</div>';
+    }
+
     specsHtml += '<div style="background:#0e0e1c;border:1px solid #2a2a45;border-radius:6px;padding:10px 12px;margin-bottom:10px;">';
 
-    // Owner info row
+    // Owner · Age · County headline row
     var dbsInfoParts = [];
     if (d.owner) dbsInfoParts.push(d.owner);
     if (d.owner_age) dbsInfoParts.push('Age ' + d.owner_age);
@@ -699,24 +717,21 @@ function renderDrawer(d) {
       specsHtml += '<div style="font-size:0.8rem;font-weight:700;color:#e2e2e2;margin-bottom:8px;">' + escHtml(dbsInfoParts.join(' · ')) + '</div>';
     }
 
-    // Score + financial grid
+    // 4-cell financial grid — HEIRS-style
     var dbsItems = [
-      ['Financial Score', d.financial_score ? String(d.financial_score) : ''],
-      ['Visual Score', d.visual_score ? String(d.visual_score) : ''],
-      ['Combined Score', d.combined_score ? String(d.combined_score) : ''],
-      ['Income Band', d.household_income || ''],
-      ['Estimated Value', d.estimated_value ? '$' + Number(d.estimated_value).toLocaleString() : ''],
-      ['Equity', d.equity_percent ? d.equity_percent + '%' : ''],
+      ['Financial Score', d.financial_score ? String(d.financial_score) : '', '#22c55e'],
+      ['Income Band',     d.household_income || '',                          '#e2b714'],
+      ['Equity',          d.equity_percent ? d.equity_percent + '%' : '',    '#e2b714'],
+      ['City',            (d.property_city || '') + (d.property_zip ? ' ' + d.property_zip : ''), '#888'],
     ].filter(function(x) { return x[1]; });
 
     if (dbsItems.length) {
       specsHtml += '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:5px;">';
       dbsItems.forEach(function(item) {
-        var valColor = item[0].indexOf('Score') >= 0 ? '#22c55e' : '#e2b714';
         specsHtml +=
           '<div style="background:#111;border-radius:4px;padding:5px 7px;">' +
           '<div style="font-size:0.52rem;color:#555;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:2px;">' + item[0] + '</div>' +
-          '<div style="font-size:0.78rem;font-weight:700;color:' + valColor + ';">' + escHtml(item[1]) + '</div>' +
+          '<div style="font-size:0.78rem;font-weight:700;color:' + item[2] + ';">' + escHtml(item[1]) + '</div>' +
           '</div>';
       });
       specsHtml += '</div>';
@@ -956,6 +971,24 @@ function renderDrawer(d) {
     '<div style="font-size:0.58rem;font-weight:800;color:#3b82f6;text-transform:uppercase;' +
       'letter-spacing:0.1em;margin-bottom:10px;">📋 Call Log</div>' +
     '<div style="display:grid;gap:7px;">' +
+
+    '<div>' +
+      '<div style="font-size:0.6rem;color:#555;margin-bottom:3px;">Call Outcome</div>' +
+      '<select id="cl-outcome" onclick="event.stopPropagation()" ' +
+        'style="width:100%;background:#1a1a2e;border:1px solid #2a2a40;border-radius:4px;' +
+        'padding:6px 8px;font-size:0.72rem;color:#e8e8e8;font-family:inherit;box-sizing:border-box;">' +
+        '<option value="">— select —</option>' +
+        '<option>No Answer</option>' +
+        '<option>Left Voicemail</option>' +
+        '<option>Wrong Number</option>' +
+        '<option>Spoke — Not Interested</option>' +
+        '<option>Spoke — Open to Talking</option>' +
+        '<option>Spoke — Wants Offer</option>' +
+        '<option>Appointment Set</option>' +
+        '<option>Dead Lead</option>' +
+      '</select>' +
+    '</div>' +
+
     '<div>' +
       '<div style="font-size:0.6rem;color:#555;margin-bottom:3px;">Who you spoke to</div>' +
       '<input id="cl-who" type="text" placeholder="Name, relationship..." ' +
@@ -979,6 +1012,21 @@ function renderDrawer(d) {
         'padding:6px 8px;font-size:0.72rem;color:#e8e8e8;font-family:inherit;' +
         'resize:vertical;box-sizing:border-box;"></textarea>' +
     '</div>' +
+
+    '<div style="background:#0e0e1c;border:1px solid #2a2a40;border-radius:6px;padding:10px 12px;">' +
+      '<div style="font-size:0.58rem;font-weight:800;color:#555;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;">🎙️ Call Recorder</div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">' +
+        '<button id="rec-start" onclick="event.stopPropagation();startRecording()" ' +
+          'style="background:#14532d;border:1px solid #22c55e;border-radius:4px;padding:7px 8px;' +
+          'font-size:0.68rem;color:#22c55e;cursor:pointer;font-family:inherit;font-weight:700;">▶ Start</button>' +
+        '<button id="rec-stop" onclick="event.stopPropagation();stopRecording()" ' +
+          'style="background:#1a1a2e;border:1px solid #2a2a40;border-radius:4px;padding:7px 8px;' +
+          'font-size:0.68rem;color:#555;cursor:not-allowed;font-family:inherit;font-weight:700;" disabled>⏹ Stop</button>' +
+      '</div>' +
+      '<div id="rec-status" style="font-size:0.62rem;color:#555;margin-top:6px;min-height:16px;"></div>' +
+      '<div id="rec-download" style="margin-top:6px;"></div>' +
+    '</div>' +
+
     '<button onclick="event.stopPropagation();copyCallLog()" ' +
       'style="background:#1e3a5f;border:1px solid #3b82f6;border-radius:4px;padding:7px 10px;' +
       'font-size:0.7rem;color:#3b82f6;cursor:pointer;font-family:inherit;' +
@@ -1038,7 +1086,61 @@ function copyCmd(text) {
   });
 }
 
+// ── CALL RECORDER ──
+var _recMediaRecorder = null;
+var _recChunks = [];
+
+function startRecording() {
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    showToast('Microphone not supported in this browser');
+    return;
+  }
+  navigator.mediaDevices.getUserMedia({ audio: true }).then(function(stream) {
+    _recChunks = [];
+    _recMediaRecorder = new MediaRecorder(stream);
+    _recMediaRecorder.ondataavailable = function(e) {
+      if (e.data && e.data.size > 0) _recChunks.push(e.data);
+    };
+    _recMediaRecorder.onstop = function() {
+      var blob = new Blob(_recChunks, { type: 'audio/webm' });
+      var url  = URL.createObjectURL(blob);
+      var ts   = new Date().toISOString().replace(/[:.]/g,'-').slice(0,19);
+      var dl   = document.getElementById('rec-download');
+      if (dl) {
+        dl.innerHTML =
+          '<a href="' + url + '" download="call-' + ts + '.webm" ' +
+          'style="display:block;background:#1e3a5f;border:1px solid #3b82f6;border-radius:4px;' +
+          'padding:6px 10px;font-size:0.68rem;color:#3b82f6;text-decoration:none;text-align:center;' +
+          'font-weight:700;">⬇ Download Recording</a>';
+      }
+      stream.getTracks().forEach(function(t) { t.stop(); });
+      var st = document.getElementById('rec-status');
+      if (st) st.textContent = 'Recording saved — click Download above.';
+    };
+    _recMediaRecorder.start();
+    var startBtn = document.getElementById('rec-start');
+    var stopBtn  = document.getElementById('rec-stop');
+    if (startBtn) { startBtn.disabled = true; startBtn.style.opacity = '0.4'; }
+    if (stopBtn)  { stopBtn.disabled = false; stopBtn.style.color = '#ef4444'; stopBtn.style.borderColor = '#ef4444'; stopBtn.style.cursor = 'pointer'; }
+    var st = document.getElementById('rec-status');
+    if (st) st.innerHTML = '<span style="color:#ef4444;font-weight:700;">● REC</span> Recording in progress…';
+  }).catch(function(err) {
+    showToast('Mic access denied — check browser permissions');
+  });
+}
+
+function stopRecording() {
+  if (_recMediaRecorder && _recMediaRecorder.state !== 'inactive') {
+    _recMediaRecorder.stop();
+    var startBtn = document.getElementById('rec-start');
+    var stopBtn  = document.getElementById('rec-stop');
+    if (startBtn) { startBtn.disabled = false; startBtn.style.opacity = '1'; }
+    if (stopBtn)  { stopBtn.disabled = true; stopBtn.style.color = '#555'; stopBtn.style.borderColor = '#2a2a40'; stopBtn.style.cursor = 'not-allowed'; }
+  }
+}
+
 function copyCallLog() {
+  var outcome = (document.getElementById('cl-outcome') || {}).value || '';
   var who   = (document.getElementById('cl-who')   || {}).value  || '';
   var said  = (document.getElementById('cl-said')  || {}).value  || '';
   var tasks = (document.getElementById('cl-tasks') || {}).value  || '';
@@ -1050,7 +1152,8 @@ function copyCallLog() {
     'CALL LOG\n' +
     '=========\n' +
     'Date:      ' + ts + '\n' +
-    'Deal:      ' + dealTitle + '\n' +
+    'Lead:      ' + dealTitle + '\n' +
+    'Outcome:   ' + (outcome || '—') + '\n' +
     'Spoke to:  ' + (who  || '—') + '\n\n' +
     'What they said:\n' + (said  || '—') + '\n\n' +
     'Insights + follow-up:\n' + (tasks || '—');
