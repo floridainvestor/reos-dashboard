@@ -64,7 +64,7 @@ details > summary::-webkit-details-marker { display: none; }
     </div>
   </div>
   <div style="text-align:right;">
-    <div style="background:#1a1a2e;border:1px solid #2a2a40;border-radius:6px;padding:6px 14px;font-size:0.82rem;color:#e8e8e8;">Apr 15, 2026 · 11:00 PM ET</div>
+    <div style="background:#1a1a2e;border:1px solid #2a2a40;border-radius:6px;padding:6px 14px;font-size:0.82rem;color:#e8e8e8;">Apr 15, 2026 · 11:30 PM ET</div>
     <div style="font-size:0.62rem;color:#444;margin-top:3px;">4/6 agents running</div>
   </div>
 </div>
@@ -1086,15 +1086,18 @@ function copyCmd(text) {
   });
 }
 
-// ── CALL RECORDER ──
+// ── CALL RECORDER + LIVE TRANSCRIPTION ──
 var _recMediaRecorder = null;
 var _recChunks = [];
+var _recRecognition = null;
+var _recTranscript = '';
 
 function startRecording() {
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
     showToast('Microphone not supported in this browser');
     return;
   }
+  _recTranscript = '';
   navigator.mediaDevices.getUserMedia({ audio: true }).then(function(stream) {
     _recChunks = [];
     _recMediaRecorder = new MediaRecorder(stream);
@@ -1114,16 +1117,49 @@ function startRecording() {
           'font-weight:700;">⬇ Download Recording</a>';
       }
       stream.getTracks().forEach(function(t) { t.stop(); });
+      var saidEl = document.getElementById('cl-said');
+      if (saidEl && !saidEl.value && _recTranscript) {
+        saidEl.value = _recTranscript.trim();
+      }
       var st = document.getElementById('rec-status');
-      if (st) st.textContent = 'Recording saved — click Download above.';
+      var summary = _recTranscript ? _recTranscript.trim().substring(0, 120) + (_recTranscript.length > 120 ? '…' : '') : 'No transcript captured.';
+      if (st) st.innerHTML = 'Recording saved. <span style="color:#aaa;">Transcript: ' + summary + '</span>';
     };
     _recMediaRecorder.start();
+
+    var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      _recRecognition = new SpeechRecognition();
+      _recRecognition.continuous = true;
+      _recRecognition.interimResults = true;
+      _recRecognition.lang = 'en-US';
+      _recRecognition.onresult = function(event) {
+        var interim = '';
+        for (var i = event.resultIndex; i < event.results.length; i++) {
+          if (event.results[i].isFinal) {
+            _recTranscript += event.results[i][0].transcript + ' ';
+          } else {
+            interim += event.results[i][0].transcript;
+          }
+        }
+        var st = document.getElementById('rec-status');
+        if (st) {
+          var preview = (_recTranscript + interim).trim();
+          st.innerHTML = '<span style="color:#ef4444;font-weight:700;">● REC</span> ' +
+            '<span style="color:#888;font-size:0.6rem;">' +
+            (preview ? preview.substring(preview.length - 80) : 'Listening…') + '</span>';
+        }
+      };
+      _recRecognition.onerror = function() {};
+      _recRecognition.start();
+    }
+
     var startBtn = document.getElementById('rec-start');
     var stopBtn  = document.getElementById('rec-stop');
     if (startBtn) { startBtn.disabled = true; startBtn.style.opacity = '0.4'; }
     if (stopBtn)  { stopBtn.disabled = false; stopBtn.style.color = '#ef4444'; stopBtn.style.borderColor = '#ef4444'; stopBtn.style.cursor = 'pointer'; }
     var st = document.getElementById('rec-status');
-    if (st) st.innerHTML = '<span style="color:#ef4444;font-weight:700;">● REC</span> Recording in progress…';
+    if (st) st.innerHTML = '<span style="color:#ef4444;font-weight:700;">● REC</span> Listening…';
   }).catch(function(err) {
     showToast('Mic access denied — check browser permissions');
   });
@@ -1132,6 +1168,7 @@ function startRecording() {
 function stopRecording() {
   if (_recMediaRecorder && _recMediaRecorder.state !== 'inactive') {
     _recMediaRecorder.stop();
+    if (_recRecognition) { try { _recRecognition.stop(); } catch(e) {} }
     var startBtn = document.getElementById('rec-start');
     var stopBtn  = document.getElementById('rec-stop');
     if (startBtn) { startBtn.disabled = false; startBtn.style.opacity = '1'; }
