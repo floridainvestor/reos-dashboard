@@ -61,7 +61,7 @@ details > summary::-webkit-details-marker { display: none; }
     </div>
   </div>
   <div style="text-align:right;">
-    <div style="background:#1a1a2e;border:1px solid #2a2a40;border-radius:6px;padding:6px 14px;font-size:0.82rem;color:#e8e8e8;">May 3, 2026 · 11:30 AM ET</div>
+    <div style="background:#1a1a2e;border:1px solid #2a2a40;border-radius:6px;padding:6px 14px;font-size:0.82rem;color:#e8e8e8;">May 3, 2026 · 11:54 AM ET</div>
     <div style="font-size:0.62rem;color:#444;margin-top:3px;">0/6 agents running</div>
   </div>
 </div>
@@ -337,18 +337,19 @@ function renderDrawer(d) {
     // ── OWNER PHONES (deceased — show with warning) ──
     if (ownerPhs.length) {
       if (heirPhs.length) {
-        // Already have heir phones — collapse owner phones
-        phoneHtml += '<details style="margin-bottom:10px;"><summary style="font-size:0.6rem;color:#555;cursor:pointer;padding:4px 0;">Owner record (may be deceased)</summary><div style="margin-top:4px;opacity:0.55;">';
+        // Already have heir phones — show owner phones small at bottom, always visible
+        phoneHtml += '<div style="margin-top:6px;padding-top:6px;border-top:1px solid #1f1f2e;">' +
+          '<div style="font-size:0.6rem;color:#555;margin-bottom:4px;letter-spacing:0.03em;">Owner record (may be deceased)</div>';
         ownerPhs.forEach(function(ph) {
           var raw = (ph.raw || '').replace(/[^\d]/g, '');
           phoneHtml +=
-            '<div style="background:#111118;border:1px solid #1f1f2e;border-radius:5px;padding:5px 12px;margin-bottom:3px;">' +
+            '<div style="padding:2px 0;">' +
             '<a href="tel:' + raw + '" onclick="event.stopPropagation()" ' +
-              'style="font-size:0.82rem;font-weight:500;color:#555;text-decoration:none;">' +
+              'style="font-size:0.72rem;color:#555;text-decoration:none;">' +
               escHtml(ph.formatted || ph.raw) + '</a>' +
             '</div>';
         });
-        phoneHtml += '</div></details>';
+        phoneHtml += '</div>';
       } else {
         // No heir phones — flag prominently and list relatives to skip trace
         phoneHtml +=
