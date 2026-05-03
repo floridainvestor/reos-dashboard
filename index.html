@@ -61,7 +61,7 @@ details > summary::-webkit-details-marker { display: none; }
     </div>
   </div>
   <div style="text-align:right;">
-    <div style="background:#1a1a2e;border:1px solid #2a2a40;border-radius:6px;padding:6px 14px;font-size:0.82rem;color:#e8e8e8;">May 2, 2026 · 9:00 PM ET</div>
+    <div style="background:#1a1a2e;border:1px solid #2a2a40;border-radius:6px;padding:6px 14px;font-size:0.82rem;color:#e8e8e8;">May 2, 2026 · 9:01 PM ET</div>
     <div style="font-size:0.62rem;color:#444;margin-top:3px;">0/6 agents running</div>
   </div>
 </div>
@@ -524,47 +524,69 @@ function renderDrawer(d) {
     factsHtml += '</div>';
   }
 
-  // ── HEIRS: RANKED FAMILY DECISION TREE ──
+  // ── HEIRS: MINI FAMILY TREE + DEALMACHINE ──
   var familyTreeHtml = '';
   if (isHeir) {
-    // Use deceased_relatives (ranked) if available, fallback to relatives
-    var treeData = (d.deceased_relatives && d.deceased_relatives.length) ? d.deceased_relatives :
-                   (d.relatives || []).map(function(r) { return {name: r.name, tier: r.rel || 'Relative', priority: 3}; });
+    familyTreeHtml =
+      '<div style="background:#0e0e1c;border:1px solid #2a2a45;border-radius:6px;padding:10px 12px;margin-bottom:12px;">' +
+      '<div style="font-size:0.58rem;font-weight:800;color:#555;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;">👨‍👩‍👧‍👦 Family Tree</div>';
 
-    if (treeData.length) {
-      familyTreeHtml =
-        '<div style="background:#0e0e1c;border:1px solid #2a2a45;border-radius:6px;padding:10px 12px;margin-bottom:12px;">' +
-        '<div style="font-size:0.58rem;font-weight:800;color:#555;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;">👨‍👩‍👧‍👦 Family Decision Tree</div>';
-
-      var dm1 = treeData.filter(function(r) { return r.priority === 1; });
-      var dm2 = treeData.filter(function(r) { return r.priority === 2; });
-      var dm3 = treeData.filter(function(r) { return r.priority >= 3; });
-
-      function _tierSection(label, items, color) {
-        if (!items.length) return '';
-        var s = '<div style="font-size:0.52rem;color:' + color + ';font-weight:800;text-transform:uppercase;' +
-                'letter-spacing:0.08em;margin-bottom:4px;margin-top:6px;">' + label + '</div>';
-        items.forEach(function(r) {
-          s += '<div style="display:flex;justify-content:space-between;align-items:center;padding:2px 0;' +
-               'border-bottom:1px solid #1a1a2e;">' +
-               '<span style="font-size:0.72rem;color:#c8c8c8;">' + escHtml(String(r.name)) + '</span>' +
-               '<span style="font-size:0.52rem;color:' + color + ';padding:1px 5px;background:#111;border-radius:3px;white-space:nowrap;">' + escHtml(r.tier) + '</span>' +
-               '</div>';
-        });
-        return s;
-      }
-
-      familyTreeHtml += _tierSection('— Decision Makers —', dm1, '#22c55e');
-      familyTreeHtml += _tierSection('— Likely Heirs —', dm2, '#e2b714');
-      familyTreeHtml += _tierSection('— Extended Family —', dm3.slice(0, 4), '#6b7280');
-
-      familyTreeHtml += '</div>';
+    // Deceased owner row
+    var decName = d.skip_trace_target || d.owner || '';
+    if (decName) {
+      familyTreeHtml +=
+        '<div style="display:flex;justify-content:space-between;align-items:center;' +
+        'padding:4px 6px;background:#1a0a0a;border:1px solid #450a0a;border-radius:4px;margin-bottom:8px;">' +
+        '<span style="font-size:0.75rem;color:#ef4444;font-weight:700;">☠ ' + escHtml(decName) + '</span>' +
+        '<span style="font-size:0.52rem;color:#7f1d1d;padding:1px 5px;background:#2a0a0a;border-radius:3px;">Deceased Owner</span>' +
+        '</div>';
     }
+
+    // DealMachine likely owner button — prominent, above relatives
+    if (d.dealmachine_url) {
+      familyTreeHtml +=
+        '<a href="' + escHtml(d.dealmachine_url) + '" target="_blank" onclick="event.stopPropagation()" ' +
+        'style="display:flex;align-items:center;justify-content:space-between;' +
+        'background:#0c1a0c;border:1px solid #166534;border-radius:5px;padding:6px 10px;' +
+        'text-decoration:none;margin-bottom:8px;">' +
+        '<span style="font-size:0.68rem;font-weight:700;color:#22c55e;">📱 Check DealMachine — Likely Owner</span>' +
+        '<span style="font-size:0.6rem;color:#166534;">→</span>' +
+        '</a>';
+    }
+
+    // Relatives with per-person Google search link
+    var rels = d.relatives || [];
+    if (rels.length) {
+      familyTreeHtml +=
+        '<div style="font-size:0.52rem;color:#555;font-weight:800;text-transform:uppercase;' +
+        'letter-spacing:0.08em;margin-bottom:5px;">Known Relatives</div>';
+      var city = d.city || 'Jacksonville';
+      rels.forEach(function(r) {
+        var rname = typeof r === 'string' ? r : (r.name || '');
+        var rrel  = typeof r === 'object' ? (r.rel || r.relationship || '') : '';
+        if (!rname) return;
+        var gUrl = 'https://www.google.com/search?q=' +
+          encodeURIComponent('"' + rname + '" ' + city + ' phone');
+        familyTreeHtml +=
+          '<div style="display:flex;justify-content:space-between;align-items:center;' +
+          'padding:3px 4px;border-bottom:1px solid #151520;">' +
+          '<div>' +
+          '<span style="font-size:0.72rem;color:#c8c8c8;">' + escHtml(rname) + '</span>' +
+          (rrel ? '<span style="font-size:0.52rem;color:#444;margin-left:6px;">' + escHtml(rrel) + '</span>' : '') +
+          '</div>' +
+          '<a href="' + escHtml(gUrl) + '" target="_blank" onclick="event.stopPropagation()" ' +
+          'style="font-size:0.55rem;color:#4a7ab5;background:#111;border:1px solid #1e3a5f;' +
+          'border-radius:3px;padding:1px 5px;text-decoration:none;white-space:nowrap;">Search</a>' +
+          '</div>';
+      });
+    }
+
+    familyTreeHtml += '</div>';
   }
 
-  // ── RESEARCH LINKS (HEIRS only) — Obituary + Code Violations ──
+  // ── RESEARCH LINKS (HEIRS) — Obituary + Code Violations ──
   var researchHtml = '';
-  if (isHeir && (d.google_obit || d.legacy_obit || d.findagrave || d.tax_url || d.orange_data)) {
+  if (isHeir) {
     researchHtml =
       '<div style="background:#0e0e1c;border:1px solid #2a2a45;border-radius:6px;padding:10px 12px;margin-bottom:12px;">' +
       '<div style="font-size:0.58rem;font-weight:800;color:#555;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;">' +
@@ -579,9 +601,9 @@ function renderDrawer(d) {
         'white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + label + '</a>';
     }
 
-    // Obituary row label
+    // Obituary — always shown for heirs (URLs auto-built from name + city)
     researchHtml +=
-      '<div style="grid-column:1/-1;font-size:0.55rem;color:#444;margin-bottom:2px;margin-top:2px;">📰 Obituary Search</div>';
+      '<div style="grid-column:1/-1;font-size:0.55rem;color:#444;margin-bottom:3px;">📰 Obituary Search</div>';
     researchHtml += resBtn('Google Dork', d.google_obit);
     researchHtml += resBtn('Legacy.com', d.legacy_obit);
     researchHtml += '<div style="grid-column:1/-1;">' + resBtn('🪦 FindAGrave', d.findagrave) + '</div>';
@@ -590,14 +612,16 @@ function renderDrawer(d) {
     if (d.tax_url) {
       researchHtml +=
         '<div style="grid-column:1/-1;font-size:0.55rem;color:#444;margin-bottom:2px;margin-top:6px;">💵 Tax Record</div>' +
-        '<div style="grid-column:1/-1;">' + resBtn('View Tax Bill (ptaxweb)', d.tax_url) + '</div>';
+        '<div style="grid-column:1/-1;">' + resBtn('View Tax Bill', d.tax_url) + '</div>';
     }
 
-    // Code violation
-    researchHtml +=
-      '<div style="grid-column:1/-1;font-size:0.55rem;color:#444;margin-bottom:2px;margin-top:6px;">🏛️ Code Violations</div>';
-    researchHtml += resBtn('OrangeData ($65)', d.orange_data);
-    researchHtml += resBtn('Palatka Code Enf.', d.code_enforce);
+    // Code violations
+    if (d.orange_data || d.code_enforce) {
+      researchHtml +=
+        '<div style="grid-column:1/-1;font-size:0.55rem;color:#444;margin-bottom:2px;margin-top:6px;">🏛️ Code Violations</div>';
+      researchHtml += resBtn('OrangeData ($65)', d.orange_data);
+      researchHtml += resBtn('Code Enf.', d.code_enforce);
+    }
 
     researchHtml += '</div></div>';
   }
