@@ -68,7 +68,7 @@ details > summary::-webkit-details-marker { display: none; }
       style="background:#111;border:1px solid #2a2a40;border-radius:6px;padding:6px 12px;
       font-size:0.72rem;color:#60a5fa;text-decoration:none;white-space:nowrap;">🏠 Casa Panel</a>
     <div>
-      <div style="background:#1a1a2e;border:1px solid #2a2a40;border-radius:6px;padding:6px 14px;font-size:0.82rem;color:#e8e8e8;">May 3, 2026 · 12:30 PM ET</div>
+      <div style="background:#1a1a2e;border:1px solid #2a2a40;border-radius:6px;padding:6px 14px;font-size:0.82rem;color:#e8e8e8;">May 3, 2026 · 12:35 PM ET</div>
       <div style="font-size:0.62rem;color:#444;margin-top:3px;">0/6 agents running</div>
     </div>
   </div>
@@ -312,110 +312,106 @@ function renderDrawer(d) {
       escHtml(d.status.substring(0,100)) + '</div>';
   }
 
-  // ── PHONE LINK — HEIRS: split heir phones from owner (deceased) phones ──
+  // ── PHONE + HEIR CONTACT — unified heir-centric view ──
   var phoneHtml = '';
   if (isHeir) {
-    var heirPhs  = d.heir_phones  || [];
-    var ownerPhs = d.owner_phones || [];
+    var allPhs = (d.heir_phones || []).concat(d.owner_phones || []);
+    var relsToCall = (d.deceased_relatives || d.relatives || []).filter(function(r) { return r && (r.name || r); });
+    var tcMap = {'Decision Maker':'#22c55e','Likely Heir':'#f59e0b','Associate':'#6b7280','Relative':'#9ca3af'};
+    var bgMap = {'Decision Maker':'#0c1a0c','Likely Heir':'#1a1200','Associate':'#0e0e0e','Relative':'#111'};
 
-    // ── HEIR PHONES (call these first) ──
-    if (heirPhs.length) {
-      phoneHtml += '<div style="font-size:0.6rem;font-weight:800;color:#22c55e;' +
-        'text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px;">📞 Call These — Living Heirs</div>';
-      phoneHtml += '<div style="margin-bottom:10px;">';
-      heirPhs.forEach(function(ph, i) {
-        var raw = (ph.raw || '').replace(/[^\d]/g, '');
-        var bg = i === 0 ? '#0a1f0a' : '#111118';
-        var border = i === 0 ? '#166534' : '#1f1f2e';
-        var sz = i === 0 ? '1.05rem' : '0.85rem';
-        var wt = i === 0 ? '800' : '600';
-        var flBadge = ph.fl_area ? '<span style="background:#1e3a5f;color:#60a5fa;font-size:0.5rem;font-weight:700;padding:1px 4px;border-radius:3px;margin-left:5px;">FL</span>' : '';
-        var nameLine = ph.label ? '<div style="font-size:0.58rem;color:#888;margin-top:2px;">' + escHtml(ph.label) + '</div>' : '';
+    // Match phones to a relative by first+last name appearing in phone label
+    function relPhones(rname) {
+      var n = rname.trim().toUpperCase();
+      var parts = n.split(/\s+/).filter(function(p) { return p.length > 1; });
+      if (parts.length < 2) return [];
+      return allPhs.filter(function(ph) {
+        var lbl = (ph.label || '').toUpperCase();
+        return lbl.indexOf(parts[0]) >= 0 && lbl.indexOf(parts[parts.length-1]) >= 0;
+      });
+    }
+
+    var matchedRaws = {};
+
+    if (relsToCall.length) {
+      phoneHtml += '<div style="font-size:0.58rem;font-weight:800;color:#555;text-transform:uppercase;' +
+        'letter-spacing:0.1em;margin-bottom:6px;">📞 Who To Contact</div>';
+
+      relsToCall.slice(0, 10).forEach(function(r) {
+        var rname = typeof r === 'string' ? r : (r.name || '');
+        if (!rname) return;
+        var tier  = (typeof r === 'object' && r.tier) ? r.tier : 'Relative';
+        var tc    = tcMap[tier] || '#9ca3af';
+        var tbg   = bgMap[tier] || '#111';
+        var rPhs  = relPhones(rname);
+        rPhs.forEach(function(ph) { matchedRaws[ph.raw] = true; });
+
+        var nameParts = rname.trim().split(/\s+/);
+        var fpUrl = 'https://www.fastpeoplesearch.com/name/' +
+          encodeURIComponent(nameParts[0] || '') + '-' +
+          encodeURIComponent(nameParts[nameParts.length-1] || '');
+        var dmUrl = 'https://app.dealmachine.com/search?q=' + encodeURIComponent(rname);
+
         phoneHtml +=
-          '<div style="background:' + bg + ';border:1px solid ' + border + ';border-radius:6px;' +
-          'padding:' + (i===0 ? '10px 14px' : '6px 14px') + ';margin-bottom:4px;">' +
+          '<div style="background:' + tbg + ';border:1px solid #1a1a2e;border-radius:5px;' +
+          'padding:6px 10px;margin-bottom:5px;">' +
+          // Name row + tier badge
+          '<div style="display:flex;justify-content:space-between;align-items:center;' +
+          'margin-bottom:' + (rPhs.length ? '5px' : '4px') + ';">' +
+          '<span style="font-size:0.75rem;color:#e8e8e8;font-weight:600;">' + escHtml(rname) + '</span>' +
+          '<span style="font-size:0.48rem;color:' + tc + ';border:1px solid ' + tc + ';' +
+          'border-radius:2px;padding:0 5px;white-space:nowrap;">' + escHtml(tier) + '</span>' +
+          '</div>';
+
+        if (rPhs.length) {
+          // Phone(s) found for this person — show as tap-to-dial
+          rPhs.forEach(function(ph) {
+            var raw = (ph.raw || '').replace(/[^\d]/g, '');
+            phoneHtml +=
+              '<a href="tel:' + raw + '" onclick="event.stopPropagation()" ' +
+              'style="display:block;font-size:0.95rem;font-weight:700;color:#22c55e;' +
+              'text-decoration:none;letter-spacing:0.03em;line-height:1.6;">' +
+              escHtml(ph.formatted || ph.raw) + '</a>' +
+              '<span style="font-size:0.52rem;color:#555;">' + escHtml(ph.type || '') + '</span>';
+          });
+        } else {
+          // No phone — skip trace buttons
+          phoneHtml +=
+            '<div style="display:flex;gap:4px;">' +
+            '<a href="' + escHtml(dmUrl) + '" target="_blank" onclick="event.stopPropagation()" ' +
+            'style="font-size:0.52rem;color:#22c55e;background:#0a120a;border:1px solid #166534;' +
+            'border-radius:3px;padding:1px 6px;text-decoration:none;">📱 DM</a>' +
+            '<a href="' + escHtml(fpUrl) + '" target="_blank" onclick="event.stopPropagation()" ' +
+            'style="font-size:0.52rem;color:#60a5fa;background:#0a0e1a;border:1px solid #1e3a5f;' +
+            'border-radius:3px;padding:1px 6px;text-decoration:none;">🔍 FPS</a>' +
+            '</div>';
+        }
+        phoneHtml += '</div>';
+      });
+    }
+
+    // Any phones not matched to a relative = deceased owner record
+    var unmatchedPhs = allPhs.filter(function(ph) { return !matchedRaws[ph.raw]; });
+    if (unmatchedPhs.length) {
+      phoneHtml +=
+        '<div style="margin-top:8px;padding-top:8px;border-top:1px solid #1f1f2e;">' +
+        '<div style="font-size:0.55rem;color:#444;margin-bottom:5px;">' +
+        'Owner record — may be deceased (someone else may answer)</div>';
+      unmatchedPhs.forEach(function(ph) {
+        var raw = (ph.raw || '').replace(/[^\d]/g, '');
+        var lbl = ph.label || '';
+        phoneHtml +=
+          '<div style="display:flex;align-items:center;justify-content:space-between;padding:3px 0;">' +
+          '<div>' +
           '<a href="tel:' + raw + '" onclick="event.stopPropagation()" ' +
-            'style="font-size:' + sz + ';font-weight:' + wt + ';color:#22c55e;text-decoration:none;letter-spacing:0.04em;">' +
-            escHtml(ph.formatted || ph.raw) + '</a>' + flBadge + nameLine +
+          'style="font-size:0.82rem;color:#555;text-decoration:none;">' +
+          escHtml(ph.formatted || ph.raw) + '</a>' +
+          (lbl ? '<div style="font-size:0.5rem;color:#3a3a4a;">' + escHtml(lbl) + '</div>' : '') +
+          '</div>' +
+          '<span style="font-size:0.5rem;color:#333;">' + escHtml(ph.type || '') + '</span>' +
           '</div>';
       });
       phoneHtml += '</div>';
-    }
-
-    // ── OWNER PHONES (deceased — show with warning) ──
-    if (ownerPhs.length) {
-      if (heirPhs.length) {
-        // Already have heir phones — show owner phones small at bottom, always visible
-        phoneHtml += '<div style="margin-top:6px;padding-top:6px;border-top:1px solid #1f1f2e;">' +
-          '<div style="font-size:0.6rem;color:#555;margin-bottom:4px;letter-spacing:0.03em;">Owner record (may be deceased)</div>';
-        ownerPhs.forEach(function(ph) {
-          var raw = (ph.raw || '').replace(/[^\d]/g, '');
-          var lbl = ph.label || '';
-          phoneHtml +=
-            '<div style="padding:2px 0;">' +
-            '<a href="tel:' + raw + '" onclick="event.stopPropagation()" ' +
-              'style="font-size:0.72rem;color:#555;text-decoration:none;">' +
-              escHtml(ph.formatted || ph.raw) + '</a>' +
-            (lbl ? '<span style="font-size:0.5rem;color:#3a3a4a;margin-left:6px;">' + escHtml(lbl) + '</span>' : '') +
-            '</div>';
-        });
-        phoneHtml += '</div>';
-      } else {
-        // No heir phones — show ranked heirs to skip trace, then owner phones with labels
-        phoneHtml +=
-          '<div style="background:#1a0a0a;border:1px solid #7f1d1d;border-radius:6px;' +
-          'padding:10px 14px;margin-bottom:8px;">' +
-          '<div style="font-size:0.72rem;color:#ef4444;font-weight:700;margin-bottom:8px;">⚠ No heir phones — skip trace these people</div>';
-
-        // Ranked heir list from deceased_relatives (has tier labels)
-        var rankRels = (d.deceased_relatives || d.relatives || []).filter(function(r) { return r && (r.name || r); });
-        var tierColors2 = {'Decision Maker':'#22c55e','Likely Heir':'#f59e0b','Associate':'#6b7280','Relative':'#9ca3af'};
-        if (rankRels.length) {
-          rankRels.slice(0, 8).forEach(function(r) {
-            var rname = typeof r === 'string' ? r : (r.name || '');
-            if (!rname) return;
-            var tier = (typeof r === 'object' && r.tier) ? r.tier : 'Relative';
-            var tc   = tierColors2[tier] || '#9ca3af';
-            var nameParts = rname.trim().split(/\s+/);
-            var fpUrl = 'https://www.fastpeoplesearch.com/name/' + encodeURIComponent(nameParts[0] || '') + '-' + encodeURIComponent(nameParts[nameParts.length-1] || '');
-            var dmUrl = 'https://app.dealmachine.com/search?q=' + encodeURIComponent(rname);
-            phoneHtml +=
-              '<div style="display:flex;justify-content:space-between;align-items:center;' +
-              'padding:4px 0;border-bottom:1px solid #2a0a0a;">' +
-              '<div>' +
-              '<span style="font-size:0.68rem;color:#e8e8e8;">' + escHtml(rname) + '</span>' +
-              '<span style="font-size:0.5rem;color:' + tc + ';border:1px solid ' + tc + ';border-radius:2px;padding:0 4px;margin-left:5px;">' + escHtml(tier) + '</span>' +
-              '</div>' +
-              '<div style="display:flex;gap:3px;">' +
-              '<a href="' + escHtml(dmUrl) + '" target="_blank" onclick="event.stopPropagation()" style="font-size:0.5rem;color:#22c55e;background:#0a120a;border:1px solid #166534;border-radius:2px;padding:1px 4px;text-decoration:none;">DM</a>' +
-              '<a href="' + escHtml(fpUrl) + '" target="_blank" onclick="event.stopPropagation()" style="font-size:0.5rem;color:#60a5fa;background:#0a0e1a;border:1px solid #1e3a5f;border-radius:2px;padding:1px 4px;text-decoration:none;">FPS</a>' +
-              '</div></div>';
-          });
-        }
-        phoneHtml += '</div>';
-
-        // Owner phones — dimmed, with label showing whose number it is
-        if (ownerPhs.length) {
-          phoneHtml += '<div style="margin-bottom:10px;">' +
-            '<div style="font-size:0.55rem;color:#444;margin-bottom:4px;">Owner record — try anyway (someone else may answer)</div>';
-          ownerPhs.forEach(function(ph) {
-            var raw = (ph.raw || '').replace(/[^\d]/g, '');
-            var lbl = ph.label || '';
-            phoneHtml +=
-              '<div style="display:flex;justify-content:space-between;align-items:center;' +
-              'background:#111118;border:1px solid #1f1f2e;border-radius:5px;padding:5px 12px;margin-bottom:3px;">' +
-              '<div>' +
-              '<a href="tel:' + raw + '" onclick="event.stopPropagation()" ' +
-                'style="font-size:0.82rem;font-weight:500;color:#555;text-decoration:none;">' +
-                escHtml(ph.formatted || ph.raw) + '</a>' +
-              (lbl ? '<div style="font-size:0.52rem;color:#444;margin-top:1px;">' + escHtml(lbl) + '</div>' : '') +
-              '</div>' +
-              '<span style="font-size:0.5rem;color:#333;">' + escHtml(ph.type || '') + '</span>' +
-              '</div>';
-          });
-          phoneHtml += '</div>';
-        }
-      }
     }
 
     // ── NO PHONES — social search fallback ──
