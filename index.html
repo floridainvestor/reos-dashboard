@@ -61,14 +61,14 @@ details > summary::-webkit-details-marker { display: none; }
     </div>
   </div>
   <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end;">
-    <a href="https://deals.czarstrategist.com/portfolio.html" target="_blank"
+    <a href="https://deals.czarstrategist.com/" target="_blank"
       style="background:#111;border:1px solid #2a2a40;border-radius:6px;padding:6px 12px;
       font-size:0.72rem;color:#e2b714;text-decoration:none;white-space:nowrap;">📊 Deals</a>
     <a href="https://panel.casaabiertarentals.com" target="_blank"
       style="background:#111;border:1px solid #2a2a40;border-radius:6px;padding:6px 12px;
       font-size:0.72rem;color:#60a5fa;text-decoration:none;white-space:nowrap;">🏠 Casa Panel</a>
     <div>
-      <div style="background:#1a1a2e;border:1px solid #2a2a40;border-radius:6px;padding:6px 14px;font-size:0.82rem;color:#e8e8e8;">May 3, 2026 · 12:35 PM ET</div>
+      <div style="background:#1a1a2e;border:1px solid #2a2a40;border-radius:6px;padding:6px 14px;font-size:0.82rem;color:#e8e8e8;">May 3, 2026 · 12:45 PM ET</div>
       <div style="font-size:0.62rem;color:#444;margin-top:3px;">0/6 agents running</div>
     </div>
   </div>
@@ -415,7 +415,7 @@ function renderDrawer(d) {
     }
 
     // ── NO PHONES — social search fallback ──
-    if (!heirPhs.length && !ownerPhs.length && d.social_search && d.social_search.facebook) {
+    if (!allPhs.length && d.social_search && d.social_search.facebook) {
       if (d.skip_trace_target) {
         phoneHtml +=
           '<div style="background:#0c0c1a;border:1px solid #2a2a50;border-radius:6px;' +
